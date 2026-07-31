@@ -1,50 +1,123 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H&H Football Academy</title>
 
-<title>H&H Football Academy</title>
+    <link rel="stylesheet" href="style.css">
 
-<link rel="stylesheet" href="style.css">
-
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-<header>
+<header class="navbar">
 
-<div class="logo">
-    H&H <span>Football Academy</span>
-</div>
+    <div class="logo">
+        <h2>H&H</h2>
+        <span>Football Academy</span>
+    </div>
 
-<nav>
+    <nav>
 
-<a href="#">Ana Sayfa</a>
-<a href="#">Antrenörler</a>
-<a href="#">Programlar</a>
-<a href="#">Galeri</a>
-<a href="#">İletişim</a>
+        <a href="#anasayfa">Ana Sayfa</a>
 
-</nav>
+        <a href="#hakkimizda">Hakkımızda</a>
+
+        <a href="#antrenorler">Antrenörler</a>
+
+        <a href="#programlar">Programlar</a>
+
+        <a href="#iletisim">İletişim</a>
+
+    </nav>
+
+    <a class="kayitBtn" href="#iletisim">
+        Deneme Antrenmanı
+    </a>
 
 </header>
 
-<section class="hero">
+<section class="hero" id="anasayfa">
 
-<div class="overlay">
+    <div class="heroContent">
 
-<h1>H&H Football Academy</h1>
+        <h1>
 
-<h2>Her Oyuncunun Bir Hikâyesi Vardır.</h2>
+            H&H
 
-<p>Biz O Hikâyeyi Geliştiriyoruz.</p>
+            Football Academy
 
-<div class="buttons">
+        </h1>
 
-<a href="#" class="btn">Deneme Antrenmanı</a>
+        <h3>
 
-<a href="https://wa.me/905324181102" class="btn2">WhatsApp</a>
+            Her Oyuncunun Bir Hikâyesi Vardır.
+
+        </h3>
+
+        <p>
+
+            Biz O Hikâyeyi Geliştiriyoruz.
+
+        </p>
+
+        <div class="buttons">
+
+            <a href="#iletisim" class="btnBlue">
+
+                Hemen Başvur
+
+            </a>
+
+            <a href="https://wa.me/905324181102" class="btnWhite">
+
+                WhatsApp
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section id="hakkimizda" class="about">
+
+<h2>H&H Bireysel Eğitim Koçluğu</h2>
+
+<p>
+
+5-17 yaş arası sporcuların teknik, fiziksel ve mental gelişimini desteklemek amacıyla bireysel futbol eğitimleri sunuyoruz.
+
+</p>
+
+</section>
+
+<section id="antrenorler" class="coaches">
+
+<h2>Antrenörlerimiz</h2>
+
+<div class="coachBox">
+
+<div class="coach">
+
+<img src="images/hakan.jpg">
+
+<h3>Hakan Altunkan</h3>
+
+<p>Kurucu Antrenör</p>
+
+</div>
+
+<div class="coach">
+
+<img src="images/aziz.jpg">
+
+<h3>Aziz Halit İrşi</h3>
+
+<p>UEFA B Lisanslı Antrenör</p>
 
 </div>
 
@@ -52,6 +125,63 @@
 
 </section>
 
-</body>
+<section id="programlar">
 
+<h2>Eğitim Programlarımız</h2>
+
+<div class="cards">
+
+<div class="card">
+
+<h3>Teknik Eğitim</h3>
+
+<p>Top kontrolü, pas ve şut çalışmaları.</p>
+
+</div>
+
+<div class="card">
+
+<h3>Fiziksel Gelişim</h3>
+
+<p>Kuvvet, çeviklik ve dayanıklılık.</p>
+
+</div>
+
+<div class="card">
+
+<h3>Mental Gelişim</h3>
+
+<p>Özgüven ve maç içi karar verme.</p>
+
+</div>
+
+</div>
+
+</section>
+
+<section id="iletisim">
+
+<h2>İletişim</h2>
+
+<p>📍 Namık Şevik Stadı</p>
+
+<p>📞 0532 418 11 02</p>
+
+<p>📞 0537 476 82 17</p>
+
+</section>
+
+<footer>
+
+<p>
+
+© 2026 H&H Football Academy
+
+</p>
+
+</footer>
+
+<script src="script.js"></script>
+
+</body>
 </html>
