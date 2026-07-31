@@ -730,16 +730,14 @@ let not = document.getElementById("not").value;
 
 
 let mesaj = 
-`⚽ H&H FOOTBALL ACADEMY ÖN KAYIT
-
-👤 Sporcu: ${sporcu}
-👨‍👩‍👦 Veli: ${veli}
-📞 Telefon: ${telefon}
-🎂 Yaş Grubu: ${yas}
-⚽ Mevki: ${mevki}
-📝 Not: ${not}
-
-📸 Lütfen sporcu fotoğrafını WhatsApp üzerinden gönderiniz.`;
+"\u26BD H&H FOOTBALL ACADEMY ÖN KAYIT\n\n" +
+"\uD83D\uDC64 Sporcu: " + sporcu + "\n" +
+"\uD83D\uDC68\u200D\uD83D\uDC66 Veli: " + veli + "\n" +
+"\uD83D\uDCDE Telefon: " + telefon + "\n" +
+"\uD83C\uDF82 Yaş Grubu: " + yas + "\n" +
+"\u26BD Mevki: " + mevki + "\n" +
+"\uD83D\uDCDD Not: " + not + "\n\n" +
+"\uD83D\uDCF8 Lütfen sporcu fotoğrafını WhatsApp üzerinden gönderiniz.";
 
 
 let url = "https://wa.me/905374768217?text=" + encodeURIComponent(mesaj);
