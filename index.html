@@ -717,33 +717,35 @@ Tüm Hakları Saklıdır.
 </footer>
 
 
- <script>
+<script>
 
 function whatsappGonder(){
 
-let sporcu=document.getElementById("sporcu").value;
-let veli=document.getElementById("veli").value;
-let telefon=document.getElementById("telefon").value;
-let yas=document.getElementById("yasGrubu").value;
-let mevki=document.getElementById("mevki").value;
-let not=document.getElementById("not").value;
+let sporcu = document.getElementById("sporcu").value;
+let veli = document.getElementById("veli").value;
+let telefon = document.getElementById("telefon").value;
+let yas = document.getElementById("yasGrubu").value;
+let mevki = document.getElementById("mevki").value;
+let not = document.getElementById("not").value;
 
 
-let mesaj=
-"⚽ H&H FOOTBALL ACADEMY ÖN KAYIT%0A%0A"+
-"👤 Sporcu: "+sporcu+"%0A"+
-"👨‍👩‍👦 Veli: "+veli+"%0A"+
-"📞 Telefon: "+telefon+"%0A"+
-"🎂 Yaş Grubu: "+yas+"%0A"+
-"⚽ Mevki: "+mevki+"%0A"+
-"📝 Not: "+not+"%0A%0A"+
-"📸 Lütfen sporcu fotoğrafını WhatsApp üzerinden gönderiniz.";
+let mesaj = 
+`⚽ H&H FOOTBALL ACADEMY ÖN KAYIT
+
+👤 Sporcu: ${sporcu}
+👨‍👩‍👦 Veli: ${veli}
+📞 Telefon: ${telefon}
+🎂 Yaş Grubu: ${yas}
+⚽ Mevki: ${mevki}
+📝 Not: ${not}
+
+📸 Lütfen sporcu fotoğrafını WhatsApp üzerinden gönderiniz.`;
 
 
-window.open(
-"https://wa.me/905374768217?text="+mesaj,
-"_blank"
-);
+let url = "https://wa.me/905374768217?text=" + encodeURIComponent(mesaj);
+
+
+window.open(url, "_blank");
 
 }
 
