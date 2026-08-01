@@ -95,6 +95,98 @@ padding:40px;
 
 }
 
+.heroContent{
+    max-width:950px;
+    margin:auto;
+}
+
+.heroBadge{
+    display:inline-block;
+    padding:10px 22px;
+    border:1px solid rgba(44,168,255,.6);
+    background:rgba(44,168,255,.12);
+    border-radius:30px;
+    font-size:14px;
+    font-weight:600;
+    letter-spacing:1px;
+    margin-bottom:25px;
+}
+
+.hero h1{
+    font-size:72px;
+    line-height:1.05;
+    margin-bottom:25px;
+}
+
+.hero h1 span{
+    color:#2ca8ff;
+}
+
+.hero h2{
+    font-size:38px;
+    line-height:1.25;
+    font-weight:600;
+}
+
+.hero p{
+    max-width:700px;
+    margin:25px auto 0;
+    font-size:20px;
+    line-height:1.7;
+    opacity:.9;
+}
+
+.heroButtons{
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-top:35px;
+}
+
+.btnOutline{
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.35);
+}
+
+.btnOutline:hover{
+    background:white;
+    color:#07152f;
+}
+
+@media(max-width:700px){
+
+    .hero{
+        padding:30px 20px;
+    }
+
+    .hero h1{
+        font-size:45px;
+    }
+
+    .hero h2{
+        font-size:27px;
+    }
+
+    .hero p{
+        font-size:17px;
+    }
+
+    .heroBadge{
+        font-size:11px;
+    }
+
+    .heroButtons{
+        flex-direction:column;
+    }
+
+    .heroButtons .btn{
+        width:100%;
+        margin-top:10px;
+    }
+
+}
+
 .hero h1{
 
 font-size:72px;
@@ -270,33 +362,37 @@ H&H <span>Football Academy</span>
 
 <section class="hero">
 
-<div>
+<div class="heroContent">
+
+<div class="heroBadge">
+⚽ BİREYSEL FUTBOL GELİŞİM AKADEMİSİ
+</div>
 
 <h1>
-
-H&H
-
-<span>Football Academy</span>
-
+H&H <span>Football Academy</span>
 </h1>
 
 <h2>
-
-Her Oyuncunun Bir Hikâyesi Vardır.
-
+Oyuncunu geliştir.<br>
+Potansiyelini ortaya çıkar.
 </h2>
 
 <p>
-
-Biz O Hikâyeyi Geliştiriyoruz.
-
+Teknik, fiziksel ve mental gelişim odaklı
+bireysel futbol eğitimleri.
 </p>
 
+<div class="heroButtons">
+
 <a href="#iletisim" class="btn">
-
-Deneme Antrenmanına Başvur
-
+⚽ Deneme Antrenmanına Başvur
 </a>
+
+<a href="#hocalar" class="btn btnOutline">
+👨‍🏫 Antrenörlerimizi Tanı
+</a>
+
+</div>
 
 </div>
 
