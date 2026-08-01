@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>H&H Yönetim Paneli</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#07152f;
+    color:white;
+    min-height:100vh;
+}
+
+.login{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.loginBox{
+    width:100%;
+    max-width:420px;
+    background:#10244d;
+    padding:35px;
+    border-radius:25px;
+    box-shadow:0 20px 60px rgba(0,0,0,.4);
+}
+
+.logo{
+    text-align:center;
+    font-size:28px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.logo span{
+    color:#2ca8ff;
+}
+
+.subtitle{
+    text-align:center;
+    opacity:.7;
+    margin-bottom:30px;
+}
+
+input{
+    width:100%;
+    padding:15px;
+    margin-bottom:15px;
+    border:0;
+    border-radius:10px;
+    font-size:16px;
+}
+
+button{
+    width:100%;
+    padding:15px;
+    border:0;
+    border-radius:30px;
+    background:#2ca8ff;
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    opacity:.9;
+}
+
+#error{
+    color:#ff7777;
+    text-align:center;
+    margin-top:15px;
+}
+
+#panel{
+    display:none;
+}
+
+header{
+    background:#061126;
+    padding:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+}
+
+header h1{
+    font-size:22px;
+}
+
+.logout{
+    width:auto;
+    padding:10px 20px;
+    background:#d9534f;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:30px 20px;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:20px;
+    margin-bottom:30px;
+}
+
+.stat{
+    background:#10244d;
+    padding:25px;
+    border-radius:20px;
+}
+
+.stat h2{
+    font-size:38px;
+    color:#2ca8ff;
+}
+
+.stat p{
+    margin-top:8px;
+    opacity:.7;
+}
+
+.cards{
+    display:grid;
+    gap:20px;
+}
+
+.application{
+    background:#10244d;
+    border-radius:20px;
+    padding:25px;
+}
+
+.application h3{
+    font-size:23px;
+    margin-bottom:15px;
+}
+
+.application p{
+    margin:8px 0;
+    line-height:1.5;
+}
+
+.badge{
+    display:inline-block;
+    background:#2ca8ff;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:13px;
+    margin-bottom:15px;
+}
+
+.empty{
+    text-align:center;
+    padding:50px;
+    opacity:.6;
+}
+</style>
+</head>
+
+<body>
+
+<!-- GİRİŞ -->
+<div class="login" id="loginPage">
+
+    <div class="loginBox">
+
+        <div class="logo">
+            H&H <span>Football Academy</span>
+        </div>
+
+        <div class="subtitle">
+            Yönetim Paneli
+        </div>
+
+        <input
+            type="email"
+            id="email"
+            placeholder="Yönetici e-posta"
+        >
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Şifre"
+        >
+
+        <button onclick="girisYap()">
+            🔐 Yönetim Paneline Gir
+        </button>
+
+        <div id="error"></div>
+
+    </div>
+
+</div>
+
+
+<!-- PANEL -->
+<div id="panel">
+
+    <header>
+
+        <h1>
+            ⚽ H&H Yönetim Paneli
+        </h1>
+
+        <button
+            class="logout"
+            onclick="cikisYap()"
+        >
+            Çıkış
+        </button>
+
+    </header>
+
+
+    <div class="container">
+
+        <div class="stats">
+
+            <div class="stat">
+
+                <h2 id="toplam">
+                    0
+                </h2>
+
+                <p>
+                    Toplam Başvuru
+                </p>
+
+            </div>
+
+            <div class="stat">
+
+                <h2 id="bugun">
+                    0
+                </h2>
+
+                <p>
+                    Bugünkü Başvuru
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <h2 style="margin-bottom:20px;">
+            📋 Ön Kayıt Başvuruları
+        </h2>
+
+
+        <div
+            class="cards"
+            id="basvurular"
+        ></div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const SUPABASE_URL =
+"https://bkzsxakbbewrqxanshaw.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_URm5qHprteJoUMLrYrR88w_7PWqJiqo";
+
+const supabaseClient =
+supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+
+// GİRİŞ
+async function girisYap(){
+
+    const email =
+        document.getElementById("email").value.trim();
+
+    const password =
+        document.getElementById("password").value;
+
+    const errorBox =
+        document.getElementById("error");
+
+    errorBox.innerText = "";
+
+    if(!email || !password){
+
+        errorBox.innerText =
+            "E-posta ve şifre giriniz.";
+
+        return;
+    }
+
+    const { data, error } =
+        await supabaseClient.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+
+    if(error){
+
+        errorBox.innerText =
+            "E-posta veya şifre hatalı.";
+
+        console.error(error);
+
+        return;
+    }
+
+    await paneliAc();
+
+}
+
+
+// PANELİ AÇ
+async function paneliAc(){
+
+    document.getElementById("loginPage").style.display =
+        "none";
+
+    document.getElementById("panel").style.display =
+        "block";
+
+    await basvurulariGetir();
+
+}
+
+
+// BAŞVURULARI GETİR
+async function basvurulariGetir(){
+
+    const container =
+        document.getElementById("basvurular");
+
+    container.innerHTML =
+        "<div class='empty'>Başvurular yükleniyor...</div>";
+
+    const { data, error } =
+        await supabaseClient
+            .from("Başvurular")
+            .select("*")
+            .order("created_at", {
+                ascending:false
+            });
+
+
+    if(error){
+
+        console.error(error);
+
+        container.innerHTML =
+            "<div class='empty'>Başvurular alınamadı.</div>";
+
+        return;
+    }
+
+
+    document.getElementById("toplam").innerText =
+        data.length;
+
+
+    const bugun =
+        new Date().toISOString().slice(0,10);
+
+    const bugunSayisi =
+        data.filter(item =>
+            item.created_at &&
+            item.created_at.startsWith(bugun)
+        ).length;
+
+
+    document.getElementById("bugun").innerText =
+        bugunSayisi;
+
+
+    if(data.length === 0){
+
+        container.innerHTML =
+            "<div class='empty'>Henüz başvuru yok.</div>";
+
+        return;
+    }
+
+
+    container.innerHTML = "";
+
+
+    data.forEach(item => {
+
+        const tarih =
+            item.created_at
+                ? new Date(item.created_at)
+                    .toLocaleString("tr-TR")
+                : "-";
+
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "application";
+
+
+        card.innerHTML = `
+
+            <span class="badge">
+                ${item.yas_grubu || "-"}
+            </span>
+
+            <h3>
+                ${guvenliMetin(item.sporcu)}
+            </h3>
+
+            <p>
+                👤 <strong>Veli:</strong>
+                ${guvenliMetin(item.veli)}
+            </p>
+
+            <p>
+                📞 <strong>Telefon:</strong>
+                ${guvenliMetin(item.telefon)}
+            </p>
+
+            <p>
+                ⚽ <strong>Mevki:</strong>
+                ${guvenliMetin(item.mevki)}
+            </p>
+
+            <p>
+                📝 <strong>Not:</strong>
+                ${guvenliMetin(item.not)}
+            </p>
+
+            <p style="opacity:.6;margin-top:15px;">
+                🗓️ ${tarih}
+            </p>
+
+        `;
+
+        container.appendChild(card);
+
+    });
+
+}
+
+
+// GÜVENLİ METİN
+function guvenliMetin(deger){
+
+    if(deger === null ||
+       deger === undefined){
+
+        return "-";
+    }
+
+    return String(deger)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+
+// ÇIKIŞ
+async function cikisYap(){
+
+    await supabaseClient.auth.signOut();
+
+    document.getElementById("panel").style.display =
+        "none";
+
+    document.getElementById("loginPage").style.display =
+        "flex";
+
+}
+
+
+// OTURUM KONTROLÜ
+async function oturumKontrol(){
+
+    const { data } =
+        await supabaseClient.auth.getSession();
+
+    if(data.session){
+
+        await paneliAc();
+
+    }
+
+}
+
+
+oturumKontrol();
+
+</script>
+
+</body>
+</html>
