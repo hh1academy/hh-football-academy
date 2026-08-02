@@ -631,6 +631,145 @@ transform:translateY(-3px);
 
 }
 
+/* ANTRENMAN GALERİSİ */
+
+.trainingGallery{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+}
+
+.trainingGallery img{
+    width:100%;
+    height:260px;
+    object-fit:cover;
+    border-radius:20px;
+    transition:.3s;
+}
+
+.trainingGallery img:hover{
+    transform:scale(1.03);
+}
+
+@media(max-width:700px){
+
+    .trainingGallery{
+        grid-template-columns:repeat(2,1fr);
+        gap:12px;
+    }
+
+    .trainingGallery img{
+        height:180px;
+        border-radius:15px;
+    }
+
+}
+
+.academyGallery{
+    position:relative;
+    max-width:1100px;
+    height:600px;
+    margin:auto;
+    overflow:hidden;
+    border-radius:30px;
+    background:#10244d;
+    box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+
+.galleryTrack{
+    display:flex;
+    height:100%;
+    transition:transform .8s ease;
+}
+
+.galleryTrack img{
+    min-width:100%;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.galleryBtn{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+
+    width:55px;
+    height:55px;
+
+    border:none;
+    border-radius:50%;
+
+    background:rgba(0,0,0,.55);
+    color:white;
+
+    font-size:40px;
+    line-height:1;
+
+    cursor:pointer;
+    z-index:5;
+
+    backdrop-filter:blur(8px);
+}
+
+.galleryBtn:hover{
+    background:#2ca8ff;
+}
+
+.galleryBtn.prev{
+    left:20px;
+}
+
+.galleryBtn.next{
+    right:20px;
+}
+
+.galleryDots{
+    display:flex;
+    justify-content:center;
+    gap:9px;
+    margin-top:22px;
+}
+
+.galleryDots span{
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:#526486;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.galleryDots span.active{
+    width:28px;
+    border-radius:10px;
+    background:#2ca8ff;
+}
+
+@media(max-width:700px){
+
+    .academyGallery{
+        height:430px;
+        border-radius:20px;
+    }
+
+    .galleryBtn{
+        width:45px;
+        height:45px;
+        font-size:32px;
+    }
+
+    .galleryBtn.prev{
+        left:10px;
+    }
+
+    .galleryBtn.next{
+        right:10px;
+    }
+
+}
+
 </style>
 
 </head>
@@ -897,6 +1036,47 @@ Hız, çeviklik, koordinasyon, dayanıklılık ve kuvvet çalışmaları.
 </div>
 
 </div>
+
+</div>
+
+</section>
+
+<section id="galeri">
+
+<h2 class="title">
+    H&H'den Kareler
+</h2>
+
+<div class="academyGallery">
+
+    <div class="galleryTrack">
+
+        <img src="images/Hh1.PNG" alt="H&H Football Academy">
+        <img src="images/Hh2.PNG" alt="H&H Football Academy">
+        <img src="images/Hh3.PNG" alt="H&H Football Academy">
+        <img src="images/Hh4.PNG" alt="H&H Football Academy">
+        <img src="images/Hh5.PNG" alt="H&H Football Academy">
+        <img src="images/Hh6.PNG" alt="H&H Football Academy">
+        <img src="images/Hh7.PNG" alt="H&H Football Academy">
+        <img src="images/Hh8.PNG" alt="H&H Football Academy">
+
+    </div>
+
+    <button class="galleryBtn prev" onclick="galeriGeri()">‹</button>
+    <button class="galleryBtn next" onclick="galeriIleri()">›</button>
+
+</div>
+
+<div class="galleryDots">
+
+    <span onclick="galeriGit(0)" class="active"></span>
+    <span onclick="galeriGit(1)"></span>
+    <span onclick="galeriGit(2)"></span>
+    <span onclick="galeriGit(3)"></span>
+    <span onclick="galeriGit(4)"></span>
+    <span onclick="galeriGit(5)"></span>
+    <span onclick="galeriGit(6)"></span>
+    <span onclick="galeriGit(7)"></span>
 
 </div>
 
@@ -1260,6 +1440,61 @@ async function whatsappGonder(){
     window.open(url, "_blank");
 
 }
+
+let galeriIndex = 0;
+
+const galeriTrack = document.querySelector(".galleryTrack");
+const galeriNoktalar = document.querySelectorAll(".galleryDots span");
+
+function galeriGuncelle(){
+
+    galeriTrack.style.transform =
+        "translateX(-" + (galeriIndex * 100) + "%)";
+
+    galeriNoktalar.forEach((nokta, index) => {
+
+        nokta.classList.toggle(
+            "active",
+            index === galeriIndex
+        );
+
+    });
+
+}
+
+function galeriIleri(){
+
+    galeriIndex++;
+
+    if(galeriIndex >= 8){
+        galeriIndex = 0;
+    }
+
+    galeriGuncelle();
+
+}
+
+function galeriGeri(){
+
+    galeriIndex--;
+
+    if(galeriIndex < 0){
+        galeriIndex = 7;
+    }
+
+    galeriGuncelle();
+
+}
+
+function galeriGit(index){
+
+    galeriIndex = index;
+
+    galeriGuncelle();
+
+}
+
+setInterval(galeriIleri, 4000);
 
 </script>
 
