@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
 
@@ -351,11 +351,362 @@ line-height:1.8;
     }
 }
 
+
+/* ============================= */
+/* H&H ACADEMY KARŞILAMA POPUP */
+/* ============================= */
+
+#welcomePopup{
+
+position:fixed;
+
+inset:0;
+
+background:rgba(2,8,22,.90);
+
+backdrop-filter:blur(10px);
+-webkit-backdrop-filter:blur(10px);
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+padding:20px;
+
+z-index:1000000;
+
+}
+
+.welcomeBox{
+
+position:relative;
+
+width:100%;
+
+max-width:650px;
+
+max-height:90vh;
+
+overflow-y:auto;
+
+background:
+linear-gradient(145deg,#10244d,#07152f);
+
+border:1px solid rgba(44,168,255,.55);
+
+border-radius:28px;
+
+padding:45px 40px;
+
+text-align:center;
+
+box-shadow:
+0 25px 80px rgba(0,0,0,.70),
+0 0 60px rgba(44,168,255,.15);
+
+}
+
+.welcomeClose{
+
+position:absolute;
+
+top:15px;
+
+right:18px;
+
+width:40px;
+
+height:40px;
+
+border:none;
+
+border-radius:50%;
+
+background:rgba(255,255,255,.10);
+
+color:white;
+
+font-size:28px;
+
+line-height:40px;
+
+cursor:pointer;
+
+}
+
+.welcomeIcon{
+
+font-size:50px;
+
+margin-bottom:10px;
+
+}
+
+.welcomeBox h2{
+
+font-size:32px;
+
+line-height:1.2;
+
+font-weight:800;
+
+}
+
+.welcomeLine{
+
+width:90px;
+
+height:3px;
+
+background:#2ca8ff;
+
+margin:22px auto;
+
+border-radius:10px;
+
+}
+
+.welcomeBox h3{
+
+font-size:18px;
+
+line-height:1.4;
+
+color:#2ca8ff;
+
+margin-bottom:20px;
+
+}
+
+.welcomeBox p{
+
+font-size:15px;
+
+line-height:1.8;
+
+margin-top:18px;
+
+opacity:.9;
+
+}
+
+.welcomeStrong{
+
+font-size:17px !important;
+
+font-weight:600;
+
+opacity:1 !important;
+
+}
+
+.welcomeQuote{
+
+border-top:1px solid rgba(255,255,255,.12);
+
+border-bottom:1px solid rgba(255,255,255,.12);
+
+padding:18px 10px;
+
+margin-top:25px !important;
+
+}
+
+.welcomeQuote b{
+
+color:#2ca8ff;
+
+}
+
+.welcomeBottom{
+
+margin-top:25px;
+
+font-size:20px;
+
+font-weight:800;
+
+}
+
+.welcomeBottom span{
+
+display:block;
+
+margin-top:8px;
+
+font-size:13px;
+
+letter-spacing:1px;
+
+color:#2ca8ff;
+
+}
+
+.welcomeButton{
+
+margin-top:28px;
+
+width:100%;
+
+padding:15px 25px;
+
+border:none;
+
+border-radius:40px;
+
+background:#2ca8ff;
+
+color:white;
+
+font-size:16px;
+
+font-weight:700;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+.welcomeButton:hover{
+
+transform:translateY(-3px);
+
+}
+
+
+/* POPUP MOBİL */
+
+@media(max-width:700px){
+
+    .welcomeBox{
+
+        padding:35px 22px;
+
+        max-height:88vh;
+
+        border-radius:22px;
+
+    }
+
+    .welcomeIcon{
+
+        font-size:40px;
+
+    }
+
+    .welcomeBox h2{
+
+        font-size:25px;
+
+    }
+
+    .welcomeBox h3{
+
+        font-size:15px;
+
+    }
+
+    .welcomeBox p{
+
+        font-size:13px;
+
+        line-height:1.7;
+
+    }
+
+    .welcomeStrong{
+
+        font-size:15px !important;
+
+    }
+
+    .welcomeBottom{
+
+        font-size:17px;
+
+    }
+
+}
+
 </style>
 
 </head>
 
 <body>
+
+
+<!-- ============================= -->
+<!-- H&H ACADEMY KARŞILAMA EKRANI -->
+<!-- ============================= -->
+
+<div id="welcomePopup">
+
+    <div class="welcomeBox">
+
+        <button class="welcomeClose" onclick="closeWelcome()">×</button>
+
+        <div class="welcomeIcon">
+            ⚽
+        </div>
+
+        <h2>
+            H&H ACADEMY’E<br>
+            HOŞ GELDİN
+        </h2>
+
+        <div class="welcomeLine"></div>
+
+        <h3>
+            BURASI SADECE BİR FUTBOL AKADEMİSİ DEĞİL.
+        </h3>
+
+        <p>
+            Burada bahanelere yer yok.<br>
+            Burada sıradanlığa yer yok.<br>
+            Burada pes etmek yok.
+        </p>
+
+        <p class="welcomeStrong">
+            Çünkü büyük oyuncular,<br>
+            büyük hayallerin peşinden gidenlerden çıkar.
+        </p>
+
+        <p>
+            İnanacaksın.<br>
+            Çalışacaksın.<br>
+            Disiplinli olacaksın.<br>
+            Ve her gün dünden daha iyi olacaksın.
+        </p>
+
+        <p class="welcomeQuote">
+            <b>Yetenek</b> seni başlatır.<br>
+            <b>Disiplin</b> seni ileri taşır.<br>
+            <b>İnanç</b> ise seni zirveye götürür.
+        </p>
+
+        <div class="welcomeBottom">
+
+            🔥 H&H ACADEMY
+
+            <span>
+                İNAN. ÇALIŞ. GELİŞ. ZİRVEYE ÇIK.
+            </span>
+
+        </div>
+
+        <button class="welcomeButton" onclick="closeWelcome()">
+
+            ⚽ AKADEMİYE GİR
+
+        </button>
+
+    </div>
+
+</div>
+
 
 <header>
 
@@ -376,6 +727,7 @@ line-height:1.8;
 </nav>
 
 </header>
+
 
 <section class="hero">
 
@@ -415,6 +767,7 @@ bireysel futbol eğitimleri.
 
 </section>
 
+
 <section id="hocalar">
 
 <h2 class="title">
@@ -453,6 +806,7 @@ Bireysel teknik gelişim, futbolcu analizi, koordinasyon ve oyuncu gelişimi üz
 
 </div>
 
+
 <div class="card">
 
 <img src="images/C0D0C377-DB64-44AD-A806-79EEB7429E57.jpeg">
@@ -483,6 +837,7 @@ UEFA B Lisanslı futbol antrenörü. Teknik gelişim, fiziksel performans ve gen
 
 </div>
 
+
 <section id="programlar">
 
 <h2 class="title">
@@ -509,6 +864,7 @@ Top kontrolü, pas, şut, ilk dokunuş, bire bir oyun ve maç içi teknik geliş
 
 </div>
 
+
 <div class="card">
 
 <div class="cardText">
@@ -524,6 +880,7 @@ Hız, çeviklik, koordinasyon, dayanıklılık ve kuvvet çalışmaları.
 </div>
 
 </div>
+
 
 <div class="card">
 
@@ -544,6 +901,7 @@ Hız, çeviklik, koordinasyon, dayanıklılık ve kuvvet çalışmaları.
 </div>
 
 </section>
+
 
 <section>
 
@@ -571,6 +929,7 @@ Eğitim Alan Sporcu
 
 </div>
 
+
 <div class="card">
 
 <div class="cardText">
@@ -586,6 +945,7 @@ Gerçekleştirilen Antrenman
 </div>
 
 </div>
+
 
 <div class="card">
 
@@ -606,6 +966,7 @@ Yıllık Antrenörlük Deneyimi
 </div>
 
 </section>
+
 
 <section>
 
@@ -677,6 +1038,7 @@ style="width:100%;padding:18px;background:#2ca8ff;color:white;border:none;border
 
 </div>
 
+
 <section id="iletisim">
 
 <h2 class="title">
@@ -735,6 +1097,7 @@ Instagram:
 
 </section>
 
+
 <a
 
 href="https://wa.me/905374768217"
@@ -777,6 +1140,7 @@ z-index:999;
 
 </a>
 
+
 <footer
 
 style="
@@ -815,6 +1179,7 @@ Tüm Hakları Saklıdır.
 
 </footer>
 
+
 <script>
 
 const SUPABASE_URL = "https://bkzsxakbbewrqxanshaw.supabase.co";
@@ -826,6 +1191,18 @@ const supabaseClient = supabase.createClient(
     SUPABASE_ANON_KEY
 );
 
+
+/* H&H ACADEMY KARŞILAMA EKRANI */
+
+function closeWelcome(){
+
+    document.getElementById("welcomePopup").style.display = "none";
+
+}
+
+
+/* WHATSAPP + SUPABASE */
+
 async function whatsappGonder(){
 
     let sporcu = document.getElementById("sporcu").value;
@@ -835,7 +1212,9 @@ async function whatsappGonder(){
     let mevki = document.getElementById("mevki").value;
     let not = document.getElementById("not").value;
 
+
     // SUPABASE'E KAYDET
+
     const { error } = await supabaseClient
         .from("Başvurular")
         .insert([
@@ -849,6 +1228,7 @@ async function whatsappGonder(){
             }
         ]);
 
+
     if (error) {
 
         console.error(error);
@@ -858,7 +1238,9 @@ async function whatsappGonder(){
         return;
     }
 
+
     // WHATSAPP MESAJI
+
     let mesaj =
         "\u26BD H&H FOOTBALL ACADEMY ÖN KAYIT\n\n" +
         "\uD83D\uDC64 Sporcu: " + sporcu + "\n" +
@@ -869,9 +1251,11 @@ async function whatsappGonder(){
         "\uD83D\uDCDD Not: " + not + "\n\n" +
         "\uD83D\uDCF8 Lütfen sporcu fotoğrafını WhatsApp üzerinden gönderiniz.";
 
+
     let url =
         "https://wa.me/905374768217?text=" +
         encodeURIComponent(mesaj);
+
 
     window.open(url, "_blank");
 
