@@ -1224,6 +1224,119 @@ document.querySelectorAll(".reveal").forEach(element => {
 
 });
 
+/* 🔥 H&H PREMIUM ALEV MENÜ */
+
+header{
+    position:fixed !important;
+    overflow:visible !important;
+    border-bottom:1px solid rgba(255,100,0,.35);
+    box-shadow:0 5px 30px rgba(255,60,0,.15);
+}
+
+/* Menü altındaki hareketli ateş */
+
+header::after{
+    content:"";
+    position:absolute;
+    left:-15%;
+    bottom:-7px;
+    width:130%;
+    height:14px;
+
+    background:
+        radial-gradient(
+            ellipse at center,
+            rgba(255,190,40,.9) 0%,
+            rgba(255,80,0,.65) 25%,
+            rgba(255,30,0,.35) 45%,
+            transparent 70%
+        );
+
+    filter:blur(5px);
+    animation:menuFire 2.2s ease-in-out infinite alternate;
+    pointer-events:none;
+}
+
+@keyframes menuFire{
+
+    0%{
+        transform:translateX(-7%) scaleX(.9);
+        opacity:.45;
+    }
+
+    50%{
+        opacity:.9;
+    }
+
+    100%{
+        transform:translateX(7%) scaleX(1.08);
+        opacity:.6;
+    }
+}
+
+/* Menü yazıları */
+
+nav a{
+    position:relative;
+    transition:
+        color .3s ease,
+        transform .3s ease,
+        text-shadow .3s ease;
+}
+
+nav a:hover{
+    color:#ffb000 !important;
+    transform:translateY(-2px);
+
+    text-shadow:
+        0 0 8px rgba(255,130,0,.9),
+        0 0 20px rgba(255,50,0,.6);
+}
+
+/* Link altında ateşli çizgi */
+
+nav a::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    bottom:-8px;
+    width:0;
+    height:2px;
+
+    transform:translateX(-50%);
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #ff3300,
+            #ffb000,
+            #ff3300,
+            transparent
+        );
+
+    box-shadow:
+        0 0 8px #ff4500,
+        0 0 15px rgba(255,70,0,.7);
+
+    transition:width .35s ease;
+}
+
+nav a:hover::after{
+    width:100%;
+}
+
+/* Mobilde daha sakin */
+
+@media(max-width:700px){
+
+    header::after{
+        height:10px;
+        filter:blur(4px);
+    }
+
+}
+
 </style>
 
 </head>
