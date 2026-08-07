@@ -534,7 +534,17 @@ font-size:13px;
     <aside class="sidebar">
         <div class="sidebarLogo">
             <div class="icon">
-                ⚽
+                <img
+    src="images/hhac.PNG"
+    alt="H&H Football Academy"
+    style="
+        width:90px;
+        height:90px;
+        object-fit:contain;
+        display:block;
+        margin:0 auto 10px;
+    "
+>
             </div>
             <h2>
                 H&H <span>ACADEMY</span>
@@ -1260,6 +1270,50 @@ async function oturumKontrol(){
 
 
 oturumKontrol();
+
+// ADMIN SAYFA GEÇİŞİ
+function adminSayfa(sayfa, buton){
+
+    // Tüm sayfaları gizle
+    document.querySelectorAll(".adminSayfa").forEach(function(page){
+        page.style.display = "none";
+    });
+
+    // Seçilen sayfayı göster
+    const secilenSayfa =
+        document.getElementById("sayfa-" + sayfa);
+
+    if(secilenSayfa){
+        secilenSayfa.style.display = "block";
+    }
+
+    // Tüm menü butonlarının active özelliğini kaldır
+    document.querySelectorAll(".adminMenu button").forEach(function(btn){
+        btn.classList.remove("active");
+    });
+
+    // Tıklanan butonu aktif yap
+    if(buton){
+        buton.classList.add("active");
+    }
+
+    // Üst başlığı değiştir
+    const basliklar = {
+        dashboard: "Ana Sayfa",
+        basvurular: "Başvurular",
+        oyuncular: "Oyuncular",
+        performans: "Performans",
+        duyurular: "Duyurular",
+        antrenmanlar: "Antrenmanlar",
+        basarilar: "Başarılar",
+        galeri: "Galeri",
+        antrenorler: "Antrenörler",
+        ayarlar: "Ayarlar"
+    };
+
+    document.getElementById("sayfaBasligi").innerText =
+        basliklar[sayfa] || "H&H Yönetim Paneli";
+}
 
 // DUYURU EKLE
 async function duyuruEkle(){
