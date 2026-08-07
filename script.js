@@ -29,3 +29,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 });
+
+console.log("SCROLL ANIMATION AKTİF");
+console.log("Bulunan eleman:", document.querySelectorAll(".scrollReveal").length);
