@@ -2056,7 +2056,7 @@ function closeWelcome(){
 }
 
 
-/* WHATSAPP + SUPABASE */
+/* WHATSAPP + SUPABASE + FOTOĞRAF */
 
 async function whatsappGonder(){
 
@@ -2065,30 +2065,134 @@ async function whatsappGonder(){
     let telefon = document.getElementById("telefon").value;
     let yas = document.getElementById("yasGrubu").value;
     let mevki = document.getElementById("mevki").value;
+    let dogumTarihi = document.getElementById("dogumTarihi").value;
+    let boy = document.getElementById("boy").value;
+    let kilo = document.getElementById("kilo").value;
+    let baskinAyak = document.getElementById("baskinAyak").value;
     let not = document.getElementById("not").value;
+    let foto = document.getElementById("foto").files[0];
+
+
+    // ZORUNLU KONTROLLER
+
+    if(!sporcu || !veli || !telefon){
+        alert("Lütfen zorunlu alanları doldurun.");
+        return;
+    }
+
+
+    // FOTOĞRAF KONTROLÜ
+
+    if(foto){
+
+        if(foto.size > 5 * 1024 * 1024){
+            alert("Fotoğraf en fazla 5 MB olabilir.");
+            return;
+        }
+
+        const izinliTipler = [
+            "image/jpeg",
+            "image/png",
+            "image/webp"
+        ];
+
+        if(!izinliTipler.includes(foto.type)){
+            alert("Lütfen JPG, PNG veya WEBP fotoğraf yükleyin.");
+            return;
+        }
+
+    }
+
+
+    let fotoUrl = null;
+
+
+    // FOTOĞRAFI SUPABASE STORAGE'A YÜKLE
+
+    if(foto){
+
+        const dosyaUzantisi =
+            foto.name.split(".").pop();
+
+        const dosyaAdi =
+            Date.now() +
+            "_" +
+            Math.random().toString(36).substring(2) +
+            "." +
+            dosyaUzantisi;
+
+
+        const { error: uploadError } =
+            await supabaseClient
+                .storage
+                .from("oyuncu-fotograflari")
+                .upload(
+                    dosyaAdi,
+                    foto,
+                    {
+                        cacheControl: "3600",
+                        upsert: false
+                    }
+                );
+
+
+        if(uploadError){
+
+            console.error(uploadError);
+
+            alert(
+                "Fotoğraf yüklenemedi: " +
+                uploadError.message
+            );
+
+            return;
+        }
+
+
+        // FOTOĞRAF URL'SİNİ AL
+
+        const { data: publicUrlData } =
+            supabaseClient
+                .storage
+                .from("oyuncu-fotograflari")
+                .getPublicUrl(dosyaAdi);
+
+
+        fotoUrl = publicUrlData.publicUrl;
+
+    }
 
 
     // SUPABASE'E KAYDET
 
-    const { error } = await supabaseClient
-        .from("Başvurular")
-        .insert([
-            {
-                sporcu: sporcu,
-                veli: veli,
-                telefon: telefon,
-                yas_grubu: yas,
-                mevki: mevki,
-                not: not
-            }
-        ]);
+    const { error } =
+        await supabaseClient
+            .from("Başvurular")
+            .insert([
+                {
+                    sporcu: sporcu,
+                    veli: veli,
+                    telefon: telefon,
+                    yas_grubu: yas,
+                    mevki: mevki,
+                    dogum_tarihi: dogumTarihi || null,
+                    boy: boy ? parseInt(boy) : null,
+                    kilo: kilo ? parseFloat(kilo) : null,
+                    baskin_ayak: baskinAyak || null,
+                    foto_url: fotoUrl,
+                    not: not
+                }
+            ]);
 
 
-    if (error) {
+    if(error){
 
         console.error(error);
 
-        alert("HATA: " + error.message);
+        alert(
+            "Başvuru kaydedilemedi: " +
+            error.message
+        );
 
         return;
     }
@@ -2103,8 +2207,11 @@ async function whatsappGonder(){
         "\uD83D\uDCDE Telefon: " + telefon + "\n" +
         "\uD83C\uDF82 Yaş Grubu: " + yas + "\n" +
         "\u26BD Mevki: " + mevki + "\n" +
-        "\uD83D\uDCDD Not: " + not + "\n\n" +
-        "\uD83D\uDCF8 Lütfen sporcu fotoğrafını WhatsApp üzerinden gönderiniz.";
+        "\uD83C\uDF82 Doğum Tarihi: " + (dogumTarihi || "-") + "\n" +
+        "\uD83D\uDCCF Boy: " + (boy || "-") + " cm\n" +
+        "\u2696\uFE0F Kilo: " + (kilo || "-") + " kg\n" +
+        "\uD83E\uDDed Baskın Ayak: " + (baskinAyak || "-") + "\n" +
+        "\uD83D\uDCDD Not: " + (not || "-");
 
 
     let url =
