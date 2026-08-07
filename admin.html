@@ -413,61 +413,125 @@ async function basvurulariGetir(){
 
     data.forEach(item => {
 
-        const tarih =
-            item.created_at
-                ? new Date(item.created_at)
-                    .toLocaleString("tr-TR")
-                : "-";
+    const tarih =
+        item.created_at
+            ? new Date(item.created_at).toLocaleString("tr-TR")
+            : "-";
 
+    const card =
+        document.createElement("div");
 
-        const card =
-            document.createElement("div");
+    card.className = "application";
 
-        card.className =
-            "application";
+    card.innerHTML = `
 
+        ${
+            item.foto_url
+            ? `
+                <img
+                    src="${guvenliMetin(item.foto_url)}"
+                    alt="Oyuncu Fotoğrafı"
+                    style="
+                        width:120px;
+                        height:120px;
+                        object-fit:cover;
+                        border-radius:16px;
+                        display:block;
+                        margin:0 auto 18px;
+                    "
+                >
+            `
+            : `
+                <div style="
+                    width:120px;
+                    height:120px;
+                    margin:0 auto 18px;
+                    border-radius:16px;
+                    background:#111;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    font-size:45px;
+                ">
+                    ⚽
+                </div>
+            `
+        }
 
-        card.innerHTML = `
+        <span class="badge">
+            ${guvenliMetin(item.yas_grubu)}
+        </span>
 
-            <span class="badge">
-                ${item.yas_grubu || "-"}
-            </span>
+        <h3>
+            ${guvenliMetin(item.sporcu)}
+        </h3>
 
-            <h3>
-                ${guvenliMetin(item.sporcu)}
-            </h3>
+        <p>
+            👤 <strong>Veli:</strong>
+            ${guvenliMetin(item.veli)}
+        </p>
 
-            <p>
-                👤 <strong>Veli:</strong>
-                ${guvenliMetin(item.veli)}
-            </p>
+        <p>
+            📞 <strong>Telefon:</strong>
+            ${guvenliMetin(item.telefon)}
+        </p>
 
-            <p>
-                📞 <strong>Telefon:</strong>
-                ${guvenliMetin(item.telefon)}
-            </p>
+        <p>
+            ⚽ <strong>Mevki:</strong>
+            ${guvenliMetin(item.mevki)}
+        </p>
 
-            <p>
-                ⚽ <strong>Mevki:</strong>
-                ${guvenliMetin(item.mevki)}
-            </p>
+        <p>
+            🎂 <strong>Doğum Tarihi:</strong>
+            ${guvenliMetin(item.dogum_tarihi)}
+        </p>
 
-            <p>
-                📝 <strong>Not:</strong>
-                ${guvenliMetin(item.not)}
-            </p>
+        <p>
+            📏 <strong>Boy:</strong>
+            ${item.boy ? guvenliMetin(item.boy) + " cm" : "-"}
+        </p>
 
-            <p style="opacity:.6;margin-top:15px;">
-                🗓️ ${tarih}
-            </p>
+        <p>
+            ⚖️ <strong>Kilo:</strong>
+            ${item.kilo ? guvenliMetin(item.kilo) + " kg" : "-"}
+        </p>
 
-        `;
+        <p>
+            🦶 <strong>Baskın Ayak:</strong>
+            ${guvenliMetin(item.baskin_ayak)}
+        </p>
 
-        container.appendChild(card);
+        <p>
+            📝 <strong>Not:</strong>
+            ${guvenliMetin(item.not)}
+        </p>
 
-    });
+        <p style="opacity:.6;margin-top:15px;">
+            🗓️ ${tarih}
+        </p>
 
-}
+        <button
+            onclick="basvuruSil('${item.id}')"
+            style="
+                width:100%;
+                margin-top:15px;
+                padding:12px;
+                border:none;
+                border-radius:10px;
+                background:#d90429;
+                color:white;
+                font-weight:bold;
+                cursor:pointer;
+            "
+        >
+            🗑️ Başvuruyu Sil
+        </button>
+
+    `;
+
+    container.appendChild(card);
+
+});
 
 
 // GÜVENLİ METİN
