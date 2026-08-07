@@ -1278,28 +1278,28 @@ oturumKontrol();
 
 // ADMIN SAYFA GEÇİŞİ
 function adminSayfa(sayfa, buton){
-    
-    alert("BUTONA BASILDI: " + sayfa);
 
-    // Tüm sayfaları gizle
+    // Bütün sayfaları gizle
     document.querySelectorAll(".adminSayfa").forEach(function(page){
         page.style.display = "none";
     });
 
-    // Seçilen sayfayı göster
+    // Seçilen sayfayı aç
     const secilenSayfa =
         document.getElementById("sayfa-" + sayfa);
 
-    if(secilenSayfa){
-        secilenSayfa.style.display = "block";
+    if(!secilenSayfa){
+        alert("Sayfa bulunamadı: " + sayfa);
+        return;
     }
 
-    // Tüm menü butonlarının active özelliğini kaldır
+    secilenSayfa.style.display = "block";
+
+    // Menü aktifliğini değiştir
     document.querySelectorAll(".adminMenu button").forEach(function(btn){
         btn.classList.remove("active");
     });
 
-    // Tıklanan butonu aktif yap
     if(buton){
         buton.classList.add("active");
     }
@@ -1320,11 +1320,11 @@ function adminSayfa(sayfa, buton){
 
     document.getElementById("sayfaBasligi").innerText =
         basliklar[sayfa] || "H&H Yönetim Paneli";
-        
-        // BAŞVURULAR SAYFASINA GİRİLDİĞİNDE VERİLERİ YENİLE
-if(sayfa === "basvurular"){
-    basvurulariGetir();
-}
+
+    // Başvurular sayfasına girildiyse Supabase'den yeniden çek
+    if(sayfa === "basvurular"){
+        basvurulariGetir();
+    }
 }
 
 // DUYURU EKLE
