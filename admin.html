@@ -968,7 +968,9 @@ async function basvurulariGetir(){
 
     document.getElementById("toplam").innerText =
         data.length;
-
+        
+        document.getElementById("dashboardToplam").innerText =
+    data.length;
 
     const bugun =
         new Date().toISOString().slice(0,10);
@@ -982,6 +984,9 @@ async function basvurulariGetir(){
 
     document.getElementById("bugun").innerText =
         bugunSayisi;
+        
+        document.getElementById("dashboardBugun").innerText =
+    bugunSayisi;
 
 
     if(data.length === 0){
