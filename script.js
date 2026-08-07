@@ -1,39 +1,31 @@
 console.log("H&H Football Academy");
 
-/* 🍎 APPLE STYLE SCROLL REVEAL */
+document.addEventListener("DOMContentLoaded", () => {
 
-const scrollElements = document.querySelectorAll(
-    "section, section h2, section h3, section p, section .card, section img, section .btn"
-);
+    const elements = document.querySelectorAll(
+        "section, section h1, section h2, section h3, section p, section img, section a, section button"
+    );
 
-scrollElements.forEach((element) => {
-    element.classList.add("scrollReveal");
-});
+    elements.forEach(element => {
+        element.classList.add("scrollReveal");
+    });
 
-const scrollObserver = new IntersectionObserver(
-    (entries, observer) => {
+    const observer = new IntersectionObserver((entries) => {
 
         entries.forEach(entry => {
 
-            if(entry.isIntersecting){
-
+            if (entry.isIntersecting) {
                 entry.target.classList.add("show");
-
-                observer.unobserve(entry.target);
-
             }
 
         });
 
-    },
-    {
-        threshold:0.12,
-        rootMargin:"0px 0px -60px 0px"
-    }
-);
-
-document
-    .querySelectorAll(".scrollReveal")
-    .forEach(element => {
-        scrollObserver.observe(element);
+    }, {
+        threshold: 0.15
     });
+
+    elements.forEach(element => {
+        observer.observe(element);
+    });
+
+});
