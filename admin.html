@@ -533,6 +533,107 @@ async function basvurulariGetir(){
 
 });
 
+// BAŞVURU SİL
+async function basvuruSil(id){
+
+    const onay =
+        confirm(
+            "Bu başvuruyu silmek istediğinize emin misiniz?"
+        );
+
+    if(!onay){
+        return;
+    }
+
+    // Önce başvuruyu bul
+    const { data: basvuru, error: bulError } =
+        await supabaseClient
+            .from("Başvurular")
+            .select("foto_url")
+            .eq("id", id)
+            .single();
+
+    if(bulError){
+        console.error(bulError);
+        alert("Başvuru bulunamadı.");
+        return;
+    }
+
+
+    // FOTOĞRAF VARSA STORAGE'DAN SİL
+    if(basvuru && basvuru.foto_url){
+
+        try{
+
+            const url =
+                new URL(basvuru.foto_url);
+
+            const marker =
+                "/storage/v1/object/public/oyuncu-fotograflari/";
+
+            const index =
+                url.pathname.indexOf(marker);
+
+            if(index !== -1){
+
+                const dosyaYolu =
+                    decodeURIComponent(
+                        url.pathname.substring(
+                            index + marker.length
+                        )
+                    );
+
+                const { error: storageError } =
+                    await supabaseClient
+                        .storage
+                        .from("oyuncu-fotograflari")
+                        .remove([dosyaYolu]);
+
+                if(storageError){
+                    console.error(storageError);
+                }
+
+            }
+
+        }catch(error){
+
+            console.error(
+                "Fotoğraf silinirken hata:",
+                error
+            );
+
+        }
+
+    }
+
+
+    // BAŞVURUYU SİL
+    const { error } =
+        await supabaseClient
+            .from("Başvurular")
+            .delete()
+            .eq("id", id);
+
+
+    if(error){
+
+        console.error(error);
+
+        alert(
+            "Başvuru silinemedi: " +
+            error.message
+        );
+
+        return;
+    }
+
+
+    alert("Başvuru başarıyla silindi.");
+
+    // LİSTEYİ YENİLE
+    basvurulariGetir();
+
+}
 
 // GÜVENLİ METİN
 function guvenliMetin(deger){
