@@ -1320,6 +1320,11 @@ function adminSayfa(sayfa, buton){
 
     document.getElementById("sayfaBasligi").innerText =
         basliklar[sayfa] || "H&H Yönetim Paneli";
+        
+        // BAŞVURULAR SAYFASINA GİRİLDİĞİNDE VERİLERİ YENİLE
+if(sayfa === "basvurular"){
+    basvurulariGetir();
+}
 }
 
 // DUYURU EKLE
