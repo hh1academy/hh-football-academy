@@ -868,20 +868,23 @@ font-size:13px;
 <script>
 
 const SUPABASE_URL =
-"https://bkzsxakbbewrqxanshaw.supabase.co";
+    "https://bkzsxakbbewrqxanshaw.supabase.co";
 
 const SUPABASE_KEY =
-"sb_publishable_URm5qHprteJoUMLrYrR88w_7PWqJiqo";
+    "sb_publishable_URm5qHprteJoUMLrYrR88w_7PWqJiqo";
 
 const supabaseClient =
-supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-);
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
 
 
+// =====================================================
 // GİRİŞ
-async function girisYap(){
+// =====================================================
+
+async function girisYap() {
 
     const email =
         document.getElementById("email").value.trim();
@@ -894,7 +897,7 @@ async function girisYap(){
 
     errorBox.innerText = "";
 
-    if(!email || !password){
+    if (!email || !password) {
 
         errorBox.innerText =
             "E-posta ve şifre giriniz.";
@@ -902,29 +905,41 @@ async function girisYap(){
         return;
     }
 
-    const { data, error } =
-        await supabaseClient.auth.signInWithPassword({
-            email: email,
-            password: password
-        });
+    try {
 
-    if(error){
+        const { data, error } =
+            await supabaseClient.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
+
+        if (error) {
+
+            console.error("Giriş hatası:", error);
+
+            errorBox.innerText =
+                "E-posta veya şifre hatalı.";
+
+            return;
+        }
+
+        await paneliAc();
+
+    } catch (error) {
+
+        console.error("Beklenmeyen giriş hatası:", error);
 
         errorBox.innerText =
-            "E-posta veya şifre hatalı.";
-
-        console.error(error);
-
-        return;
+            "Giriş sırasında bir hata oluştu.";
     }
-
-    await paneliAc();
-
 }
 
 
+// =====================================================
 // PANELİ AÇ
-async function paneliAc(){
+// =====================================================
+
+async function paneliAc() {
 
     document.getElementById("loginPage").style.display =
         "none";
@@ -933,415 +948,681 @@ async function paneliAc(){
         "block";
 
     await basvurulariGetir();
-
 }
 
 
+// =====================================================
 // BAŞVURULARI GETİR
-async function basvurulariGetir(){
+// =====================================================
+
+async function basvurulariGetir() {
 
     const container =
         document.getElementById("basvurular");
 
+    if (!container) {
+        console.error("basvurular elementi bulunamadı.");
+        return;
+    }
+
     container.innerHTML =
         "<div class='empty'>Başvurular yükleniyor...</div>";
 
-    const { data, error } =
-        await supabaseClient
-            .from("Başvurular")
-            .select("*")
-            .order("created_at", {
-                ascending:false
-            });
+    try {
+
+        const { data, error } =
+            await supabaseClient
+                .from("Başvurular")
+                .select("*")
+                .order("created_at", {
+                    ascending: false
+                });
+
+        if (error) {
+
+            console.error(
+                "Başvurular alınamadı:",
+                error
+            );
+
+            container.innerHTML =
+                "<div class='empty'>Başvurular alınamadı.</div>";
+
+            return;
+        }
+
+        const basvurular =
+            data || [];
 
 
-    if(error){
+        // TOPLAM BAŞVURU
 
-        console.error(error);
+        const toplamElement =
+            document.getElementById("toplam");
+
+        const dashboardToplamElement =
+            document.getElementById("dashboardToplam");
+
+        if (toplamElement) {
+            toplamElement.innerText =
+                basvurular.length;
+        }
+
+        if (dashboardToplamElement) {
+            dashboardToplamElement.innerText =
+                basvurular.length;
+        }
+
+
+        // BUGÜNKÜ BAŞVURULAR
+
+        const bugun =
+            new Date()
+                .toISOString()
+                .slice(0, 10);
+
+        const bugunSayisi =
+            basvurular.filter(item => {
+
+                if (!item.created_at) {
+                    return false;
+                }
+
+                return item.created_at.startsWith(bugun);
+
+            }).length;
+
+
+        const bugunElement =
+            document.getElementById("bugun");
+
+        const dashboardBugunElement =
+            document.getElementById("dashboardBugun");
+
+        if (bugunElement) {
+            bugunElement.innerText =
+                bugunSayisi;
+        }
+
+        if (dashboardBugunElement) {
+            dashboardBugunElement.innerText =
+                bugunSayisi;
+        }
+
+
+        // BAŞVURU YOK
+
+        if (basvurular.length === 0) {
+
+            container.innerHTML =
+                "<div class='empty'>Henüz başvuru yok.</div>";
+
+            return;
+        }
+
+
+        // LİSTEYİ TEMİZLE
+
+        container.innerHTML = "";
+
+
+        // BAŞVURULARI OLUŞTUR
+
+        basvurular.forEach(item => {
+
+            const tarih =
+                item.created_at
+                    ? new Date(
+                        item.created_at
+                    ).toLocaleString("tr-TR")
+                    : "-";
+
+
+            const card =
+                document.createElement("div");
+
+            card.className =
+                "application";
+
+
+            const fotoHTML =
+                item.foto_url
+                    ? `
+                        <img
+                            src="${guvenliMetin(item.foto_url)}"
+                            alt="Oyuncu Fotoğrafı"
+                            style="
+                                width:120px;
+                                height:120px;
+                                object-fit:cover;
+                                border-radius:16px;
+                                display:block;
+                                margin:0 auto 18px;
+                            "
+                        >
+                    `
+                    : `
+                        <div style="
+                            width:120px;
+                            height:120px;
+                            margin:0 auto 18px;
+                            border-radius:16px;
+                            background:#111;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            font-size:45px;
+                        ">
+                            ⚽
+                        </div>
+                    `;
+
+
+            card.innerHTML = `
+
+                ${fotoHTML}
+
+                <span class="badge">
+                    ${guvenliMetin(item.yas_grubu)}
+                </span>
+
+                <h3>
+                    ${guvenliMetin(item.sporcu)}
+                </h3>
+
+                <p>
+                    👤 <strong>Veli:</strong>
+                    ${guvenliMetin(item.veli)}
+                </p>
+
+                <p>
+                    📞 <strong>Telefon:</strong>
+                    ${guvenliMetin(item.telefon)}
+                </p>
+
+                <p>
+                    ⚽ <strong>Mevki:</strong>
+                    ${guvenliMetin(item.mevki)}
+                </p>
+
+                <p>
+                    🎂 <strong>Doğum Tarihi:</strong>
+                    ${guvenliMetin(item.dogum_tarihi)}
+                </p>
+
+                <p>
+                    📏 <strong>Boy:</strong>
+                    ${
+                        item.boy
+                            ? guvenliMetin(item.boy) + " cm"
+                            : "-"
+                    }
+                </p>
+
+                <p>
+                    ⚖️ <strong>Kilo:</strong>
+                    ${
+                        item.kilo
+                            ? guvenliMetin(item.kilo) + " kg"
+                            : "-"
+                    }
+                </p>
+
+                <p>
+                    🦶 <strong>Baskın Ayak:</strong>
+                    ${guvenliMetin(item.baskin_ayak)}
+                </p>
+
+                <p>
+                    📝 <strong>Not:</strong>
+                    ${guvenliMetin(item.not)}
+                </p>
+
+                <p style="
+                    opacity:.6;
+                    margin-top:15px;
+                ">
+                    🗓️ ${tarih}
+                </p>
+
+                <button
+                    type="button"
+                    onclick="basvuruSil('${guvenliMetin(item.id)}')"
+                    style="
+                        width:100%;
+                        margin-top:15px;
+                        padding:12px;
+                        border:none;
+                        border-radius:10px;
+                        background:#d90429;
+                        color:white;
+                        font-weight:bold;
+                        cursor:pointer;
+                    "
+                >
+                    🗑️ Başvuruyu Sil
+                </button>
+
+            `;
+
+            container.appendChild(card);
+
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Başvurular yüklenirken hata:",
+            error
+        );
 
         container.innerHTML =
             "<div class='empty'>Başvurular alınamadı.</div>";
-
-        return;
     }
+}
 
 
-    document.getElementById("toplam").innerText =
-        data.length;
-        
-        document.getElementById("dashboardToplam").innerText =
-    data.length;
-
-    const bugun =
-        new Date().toISOString().slice(0,10);
-
-    const bugunSayisi =
-        data.filter(item =>
-            item.created_at &&
-            item.created_at.startsWith(bugun)
-        ).length;
-
-
-    document.getElementById("bugun").innerText =
-        bugunSayisi;
-        
-        document.getElementById("dashboardBugun").innerText =
-    bugunSayisi;
-
-
-    if(data.length === 0){
-
-        container.innerHTML =
-            "<div class='empty'>Henüz başvuru yok.</div>";
-
-        return;
-    }
-
-
-    container.innerHTML = "";
-
-
-    data.forEach(item => {
-
-    const tarih =
-        item.created_at
-            ? new Date(item.created_at).toLocaleString("tr-TR")
-            : "-";
-
-    const card =
-        document.createElement("div");
-
-    card.className = "application";
-
-    card.innerHTML = `
-
-        ${
-            item.foto_url
-            ? `
-                <img
-                    src="${guvenliMetin(item.foto_url)}"
-                    alt="Oyuncu Fotoğrafı"
-                    style="
-                        width:120px;
-                        height:120px;
-                        object-fit:cover;
-                        border-radius:16px;
-                        display:block;
-                        margin:0 auto 18px;
-                    "
-                >
-            `
-            : `
-                <div style="
-                    width:120px;
-                    height:120px;
-                    margin:0 auto 18px;
-                    border-radius:16px;
-                    background:#111;
-                    display:flex;
-                    align-items:center;
-                    justify-content:center;
-                    font-size:45px;
-                ">
-                    ⚽
-                </div>
-            `
-        }
-
-        <span class="badge">
-            ${guvenliMetin(item.yas_grubu)}
-        </span>
-
-        <h3>
-            ${guvenliMetin(item.sporcu)}
-        </h3>
-
-        <p>
-            👤 <strong>Veli:</strong>
-            ${guvenliMetin(item.veli)}
-        </p>
-
-        <p>
-            📞 <strong>Telefon:</strong>
-            ${guvenliMetin(item.telefon)}
-        </p>
-
-        <p>
-            ⚽ <strong>Mevki:</strong>
-            ${guvenliMetin(item.mevki)}
-        </p>
-
-        <p>
-            🎂 <strong>Doğum Tarihi:</strong>
-            ${guvenliMetin(item.dogum_tarihi)}
-        </p>
-
-        <p>
-            📏 <strong>Boy:</strong>
-            ${item.boy ? guvenliMetin(item.boy) + " cm" : "-"}
-        </p>
-
-        <p>
-            ⚖️ <strong>Kilo:</strong>
-            ${item.kilo ? guvenliMetin(item.kilo) + " kg" : "-"}
-        </p>
-
-        <p>
-            🦶 <strong>Baskın Ayak:</strong>
-            ${guvenliMetin(item.baskin_ayak)}
-        </p>
-
-        <p>
-            📝 <strong>Not:</strong>
-            ${guvenliMetin(item.not)}
-        </p>
-
-        <p style="opacity:.6;margin-top:15px;">
-            🗓️ ${tarih}
-        </p>
-
-        <button
-            onclick="basvuruSil('${item.id}')"
-            style="
-                width:100%;
-                margin-top:15px;
-                padding:12px;
-                border:none;
-                border-radius:10px;
-                background:#d90429;
-                color:white;
-                font-weight:bold;
-                cursor:pointer;
-            "
-        >
-            🗑️ Başvuruyu Sil
-        </button>
-
-    `;
-
-    container.appendChild(card);
-
-});
-
-} //
-
+// =====================================================
 // BAŞVURU SİL
-async function basvuruSil(id){
+// =====================================================
+
+async function basvuruSil(id) {
 
     const onay =
         confirm(
             "Bu başvuruyu silmek istediğinize emin misiniz?"
         );
 
-    if(!onay){
-        return;
-    }
-
-    // Önce başvuruyu bul
-    const { data: basvuru, error: bulError } =
-        await supabaseClient
-            .from("Başvurular")
-            .select("foto_url")
-            .eq("id", id)
-            .single();
-
-    if(bulError){
-        console.error(bulError);
-        alert("Başvuru bulunamadı.");
+    if (!onay) {
         return;
     }
 
 
-    // FOTOĞRAF VARSA STORAGE'DAN SİL
-    if(basvuru && basvuru.foto_url){
+    try {
 
-        try{
+        // ÖNCE BAŞVURUYU BUL
 
-            const url =
-                new URL(basvuru.foto_url);
+        const { data: basvuru, error: bulError } =
+            await supabaseClient
+                .from("Başvurular")
+                .select("foto_url")
+                .eq("id", id)
+                .single();
 
-            const marker =
-                "/storage/v1/object/public/oyuncu-fotograflari/";
 
-            const index =
-                url.pathname.indexOf(marker);
-
-            if(index !== -1){
-
-                const dosyaYolu =
-                    decodeURIComponent(
-                        url.pathname.substring(
-                            index + marker.length
-                        )
-                    );
-
-                const { error: storageError } =
-                    await supabaseClient
-                        .storage
-                        .from("oyuncu-fotograflari")
-                        .remove([dosyaYolu]);
-
-                if(storageError){
-                    console.error(storageError);
-                }
-
-            }
-
-        }catch(error){
+        if (bulError) {
 
             console.error(
-                "Fotoğraf silinirken hata:",
+                "Başvuru bulunamadı:",
+                bulError
+            );
+
+            alert("Başvuru bulunamadı.");
+
+            return;
+        }
+
+
+        // FOTOĞRAF VARSA STORAGE'DAN SİL
+
+        if (
+            basvuru &&
+            basvuru.foto_url
+        ) {
+
+            try {
+
+                const url =
+                    new URL(
+                        basvuru.foto_url
+                    );
+
+                const marker =
+                    "/storage/v1/object/public/oyuncu-fotograflari/";
+
+                const index =
+                    url.pathname.indexOf(marker);
+
+
+                if (index !== -1) {
+
+                    const dosyaYolu =
+                        decodeURIComponent(
+                            url.pathname.substring(
+                                index + marker.length
+                            )
+                        );
+
+
+                    const { error: storageError } =
+                        await supabaseClient
+                            .storage
+                            .from("oyuncu-fotograflari")
+                            .remove([
+                                dosyaYolu
+                            ]);
+
+
+                    if (storageError) {
+
+                        console.error(
+                            "Fotoğraf silme hatası:",
+                            storageError
+                        );
+                    }
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Fotoğraf işlenirken hata:",
+                    error
+                );
+            }
+        }
+
+
+        // BAŞVURUYU SİL
+
+        const { error } =
+            await supabaseClient
+                .from("Başvurular")
+                .delete()
+                .eq("id", id);
+
+
+        if (error) {
+
+            console.error(
+                "Başvuru silme hatası:",
                 error
             );
 
+            alert(
+                "Başvuru silinemedi: " +
+                error.message
+            );
+
+            return;
         }
 
-    }
-
-
-    // BAŞVURUYU SİL
-    const { error } =
-        await supabaseClient
-            .from("Başvurular")
-            .delete()
-            .eq("id", id);
-
-
-    if(error){
-
-        console.error(error);
 
         alert(
-            "Başvuru silinemedi: " +
-            error.message
+            "Başvuru başarıyla silindi."
         );
 
-        return;
+
+        await basvurulariGetir();
+
+    } catch (error) {
+
+        console.error(
+            "Silme işleminde hata:",
+            error
+        );
+
+        alert(
+            "Silme sırasında bir hata oluştu."
+        );
     }
-
-
-    alert("Başvuru başarıyla silindi.");
-
-    // LİSTEYİ YENİLE
-    basvurulariGetir();
-
 }
 
-// GÜVENLİ METİN
-function guvenliMetin(deger){
 
-    if(deger === null ||
-       deger === undefined){
+// =====================================================
+// GÜVENLİ METİN
+// =====================================================
+
+function guvenliMetin(deger) {
+
+    if (
+        deger === null ||
+        deger === undefined
+    ) {
 
         return "-";
     }
 
     return String(deger)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
 
+// =====================================================
 // ÇIKIŞ
-async function cikisYap(){
+// =====================================================
 
-    await supabaseClient.auth.signOut();
+async function cikisYap() {
+
+    try {
+
+        await supabaseClient.auth.signOut();
+
+    } catch (error) {
+
+        console.error(
+            "Çıkış hatası:",
+            error
+        );
+    }
+
 
     document.getElementById("panel").style.display =
         "none";
 
     document.getElementById("loginPage").style.display =
         "flex";
-
 }
 
 
+// =====================================================
 // OTURUM KONTROLÜ
-async function oturumKontrol(){
+// =====================================================
 
-    const { data } =
-        await supabaseClient.auth.getSession();
+async function oturumKontrol() {
 
-    if(data.session){
+    try {
 
-        await paneliAc();
+        const { data, error } =
+            await supabaseClient.auth.getSession();
 
+
+        if (error) {
+
+            console.error(
+                "Oturum kontrol hatası:",
+                error
+            );
+
+            return;
+        }
+
+
+        if (data.session) {
+
+            await paneliAc();
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Oturum kontrolünde hata:",
+            error
+        );
     }
-
 }
 
 
-oturumKontrol();
-
+// =====================================================
 // ADMIN SAYFA GEÇİŞİ
-function adminSayfa(sayfa, buton){
+// =====================================================
 
-    // Bütün sayfaları gizle
-    document.querySelectorAll(".adminSayfa").forEach(function(page){
-        page.style.display = "none";
-    });
+window.adminSayfa =
+    function(sayfa, buton) {
 
-    // Seçilen sayfayı aç
-    const secilenSayfa =
-        document.getElementById("sayfa-" + sayfa);
 
-    if(!secilenSayfa){
-        alert("Sayfa bulunamadı: " + sayfa);
-        return;
-    }
+        // TÜM SAYFALARI GİZLE
 
-    secilenSayfa.style.display = "block";
+        document
+            .querySelectorAll(".adminSayfa")
+            .forEach(function(page) {
 
-    // Menü aktifliğini değiştir
-    document.querySelectorAll(".adminMenu button").forEach(function(btn){
-        btn.classList.remove("active");
-    });
+                page.style.display =
+                    "none";
 
-    if(buton){
-        buton.classList.add("active");
-    }
+            });
 
-    // Üst başlığı değiştir
-    const basliklar = {
-        dashboard: "Ana Sayfa",
-        basvurular: "Başvurular",
-        oyuncular: "Oyuncular",
-        performans: "Performans",
-        duyurular: "Duyurular",
-        antrenmanlar: "Antrenmanlar",
-        basarilar: "Başarılar",
-        galeri: "Galeri",
-        antrenorler: "Antrenörler",
-        ayarlar: "Ayarlar"
+
+        // SEÇİLEN SAYFAYI BUL
+
+        const secilenSayfa =
+            document.getElementById(
+                "sayfa-" + sayfa
+            );
+
+
+        if (!secilenSayfa) {
+
+            console.error(
+                "Sayfa bulunamadı:",
+                "sayfa-" + sayfa
+            );
+
+            alert(
+                "Sayfa bulunamadı: " +
+                sayfa
+            );
+
+            return;
+        }
+
+
+        // SAYFAYI GÖSTER
+
+        secilenSayfa.style.display =
+            "block";
+
+
+        // MENÜLERİ TEMİZLE
+
+        document
+            .querySelectorAll(".adminMenu button")
+            .forEach(function(btn) {
+
+                btn.classList.remove(
+                    "active"
+                );
+
+            });
+
+
+        // SEÇİLEN MENÜYÜ AKTİF YAP
+
+        if (buton) {
+
+            buton.classList.add(
+                "active"
+            );
+        }
+
+
+        // SAYFA BAŞLIKLARI
+
+        const basliklar = {
+
+            dashboard:
+                "Ana Sayfa",
+
+            basvurular:
+                "Başvurular",
+
+            oyuncular:
+                "Oyuncular",
+
+            performans:
+                "Performans",
+
+            duyurular:
+                "Duyurular",
+
+            antrenmanlar:
+                "Antrenmanlar",
+
+            basarilar:
+                "Başarılar",
+
+            galeri:
+                "Galeri",
+
+            antrenorler:
+                "Antrenörler",
+
+            ayarlar:
+                "Ayarlar"
+
+        };
+
+
+        const baslik =
+            document.getElementById(
+                "sayfaBasligi"
+            );
+
+
+        if (baslik) {
+
+            baslik.innerText =
+                basliklar[sayfa] ||
+                "H&H Yönetim Paneli";
+        }
+
+
+        // BAŞVURULAR SAYFASI
+
+        if (
+            sayfa ===
+            "basvurular"
+        ) {
+
+            basvurulariGetir();
+        }
     };
 
-    document.getElementById("sayfaBasligi").innerText =
-        basliklar[sayfa] || "H&H Yönetim Paneli";
 
-    // Başvurular sayfasına girildiyse Supabase'den yeniden çek
-    if(sayfa === "basvurular"){
-        basvurulariGetir();
-    }
-}
-
+// =====================================================
 // DUYURU EKLE
-async function duyuruEkle(){
+// =====================================================
+
+async function duyuruEkle() {
 
     const baslik =
-        document.getElementById("duyuruBaslik").value.trim();
+        document
+            .getElementById("duyuruBaslik")
+            .value
+            .trim();
+
 
     const aciklama =
-        document.getElementById("duyuruAciklama").value.trim();
+        document
+            .getElementById("duyuruAciklama")
+            .value
+            .trim();
+
 
     const mesaj =
-        document.getElementById("duyuruMesaj");
+        document.getElementById(
+            "duyuruMesaj"
+        );
+
 
     mesaj.innerText = "";
 
-    if(!baslik){
+
+    if (!baslik) {
 
         mesaj.innerText =
             "Lütfen duyuru başlığını girin.";
@@ -1349,34 +1630,70 @@ async function duyuruEkle(){
         return;
     }
 
-    const { error } =
-        await supabaseClient
-            .from("Duyurular")
-            .insert([
-                {
-                    baslik: baslik,
-                    aciklama: aciklama
-                }
-            ]);
 
-    if(error){
+    try {
 
-        console.error(error);
+        const { error } =
+            await supabaseClient
+                .from("Duyurular")
+                .insert([
+                    {
+                        baslik:
+                            baslik,
+
+                        aciklama:
+                            aciklama
+                    }
+                ]);
+
+
+        if (error) {
+
+            console.error(
+                "Duyuru ekleme hatası:",
+                error
+            );
+
+            mesaj.innerText =
+                "Duyuru eklenemedi: " +
+                error.message;
+
+            return;
+        }
+
 
         mesaj.innerText =
-            "Duyuru eklenemedi: " +
-            error.message;
+            "✅ Duyuru başarıyla yayınlandı.";
 
-        return;
+
+        document.getElementById(
+            "duyuruBaslik"
+        ).value = "";
+
+
+        document.getElementById(
+            "duyuruAciklama"
+        ).value = "";
+
+
+    } catch (error) {
+
+        console.error(
+            "Duyuru işleminde hata:",
+            error
+        );
+
+        mesaj.innerText =
+            "Duyuru eklenirken bir hata oluştu.";
     }
-
-    mesaj.innerText =
-        "✅ Duyuru başarıyla yayınlandı.";
-
-    document.getElementById("duyuruBaslik").value = "";
-    document.getElementById("duyuruAciklama").value = "";
-
 }
+
+
+// =====================================================
+// SAYFA YÜKLENDİĞİNDE OTURUMU KONTROL ET
+// =====================================================
+
+oturumKontrol();
 
 </script>
 
