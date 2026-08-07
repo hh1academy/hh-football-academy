@@ -263,6 +263,71 @@ header h1{
             </div>
 
         </div>
+        
+        <!-- DUYURULAR -->
+<div style="
+    background:#10244d;
+    padding:25px;
+    border-radius:20px;
+    margin-bottom:30px;
+">
+
+    <h2 style="margin-bottom:20px;">
+        📢 Yeni Duyuru
+    </h2>
+
+    <input
+        id="duyuruBaslik"
+        type="text"
+        placeholder="Duyuru başlığı"
+        style="
+            width:100%;
+            padding:15px;
+            margin-bottom:15px;
+            border:0;
+            border-radius:10px;
+            font-size:16px;
+        "
+    >
+
+    <textarea
+        id="duyuruAciklama"
+        placeholder="Duyuru açıklaması"
+        style="
+            width:100%;
+            height:120px;
+            padding:15px;
+            margin-bottom:15px;
+            border:0;
+            border-radius:10px;
+            font-size:16px;
+            resize:vertical;
+        "
+    ></textarea>
+
+    <button
+        onclick="duyuruEkle()"
+        style="
+            width:100%;
+            padding:15px;
+            border:0;
+            border-radius:30px;
+            background:#2ca8ff;
+            color:white;
+            font-size:16px;
+            font-weight:bold;
+            cursor:pointer;
+        "
+    >
+        📢 Duyuruyu Yayınla
+    </button>
+
+    <div id="duyuruMesaj" style="
+        margin-top:15px;
+        text-align:center;
+    "></div>
+
+</div>
 
 
         <h2 style="margin-bottom:20px;">
@@ -685,6 +750,57 @@ async function oturumKontrol(){
 
 
 oturumKontrol();
+
+// DUYURU EKLE
+async function duyuruEkle(){
+
+    const baslik =
+        document.getElementById("duyuruBaslik").value.trim();
+
+    const aciklama =
+        document.getElementById("duyuruAciklama").value.trim();
+
+    const mesaj =
+        document.getElementById("duyuruMesaj");
+
+    mesaj.innerText = "";
+
+    if(!baslik){
+
+        mesaj.innerText =
+            "Lütfen duyuru başlığını girin.";
+
+        return;
+    }
+
+    const { error } =
+        await supabaseClient
+            .from("Duyurular")
+            .insert([
+                {
+                    baslik: baslik,
+                    aciklama: aciklama
+                }
+            ]);
+
+    if(error){
+
+        console.error(error);
+
+        mesaj.innerText =
+            "Duyuru eklenemedi: " +
+            error.message;
+
+        return;
+    }
+
+    mesaj.innerText =
+        "✅ Duyuru başarıyla yayınlandı.";
+
+    document.getElementById("duyuruBaslik").value = "";
+    document.getElementById("duyuruAciklama").value = "";
+
+}
 
 </script>
 
