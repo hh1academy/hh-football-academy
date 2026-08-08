@@ -2749,6 +2749,168 @@ function oyuncuFiltrele(grup, buton){
 
 }
 
+// =====================================================
+// BAŞVURUYU KADROYA AL
+// =====================================================
+
+async function kadroyaAl(id){
+
+    const onay = confirm(
+        "Bu oyuncuyu kadroya almak istediğine emin misin?"
+    );
+
+    if(!onay){
+        return;
+    }
+
+
+    try{
+
+        // BAŞVURUYU GETİR
+
+        const { data: basvuru, error: basvuruError } =
+            await supabaseClient
+                .from("Başvurular")
+                .select("*")
+                .eq("id", id)
+                .single();
+
+
+        if(basvuruError){
+
+            console.error(
+                "Başvuru alınamadı:",
+                basvuruError
+            );
+
+            alert(
+                "Başvuru alınamadı: " +
+                basvuruError.message
+            );
+
+            return;
+        }
+
+
+        // ZATEN KADRODA MI?
+
+        if(basvuru.kadroda === true){
+
+            alert(
+                "Bu oyuncu zaten kadroda."
+            );
+
+            return;
+        }
+
+
+        // OYUNCULAR TABLOSUNA EKLE
+
+        const { error: oyuncuError } =
+            await supabaseClient
+                .from("Oyuncular")
+                .insert([{
+
+                    sporcu_adi:
+                        basvuru.sporcu,
+
+                    foto_url:
+                        basvuru.foto_url || null,
+
+                    dogum_tarihi:
+                        basvuru.dogum_tarihi || null,
+
+                    yas_grubu:
+                        basvuru.yas_grubu,
+
+                    mevki:
+                        basvuru.mevki || null,
+
+                    boy:
+                        basvuru.boy || null,
+
+                    kilo:
+                        basvuru.kilo || null,
+
+                    baskin_ayak:
+                        basvuru.baskin_ayak || null,
+
+                    veli_adi:
+                        basvuru.veli || null,
+
+                    veli_telefon:
+                        basvuru.telefon || null
+
+                }]);
+
+
+        if(oyuncuError){
+
+            console.error(
+                "Kadroya alma hatası:",
+                oyuncuError
+            );
+
+            alert(
+                "Oyuncu kadroya alınamadı: " +
+                oyuncuError.message
+            );
+
+            return;
+        }
+
+
+        // BAŞVURUYA KADRODA BİLGİSİ YAZ
+
+        const { error: updateError } =
+            await supabaseClient
+                .from("Başvurular")
+                .update({
+                    kadroda:true
+                })
+                .eq("id", id);
+
+
+        if(updateError){
+
+            console.error(
+                "Başvuru güncelleme hatası:",
+                updateError
+            );
+
+            alert(
+                "Oyuncu kadroya alındı fakat başvuru durumu güncellenemedi."
+            );
+
+            return;
+        }
+
+
+        alert(
+            "⚽ Oyuncu başarıyla kadroya alındı!"
+        );
+
+
+        // LİSTEYİ YENİLE
+
+        await basvurulariGetir();
+
+
+    }catch(error){
+
+        console.error(
+            "Kadroya alma işleminde hata:",
+            error
+        );
+
+        alert(
+            "Kadroya alma sırasında bir hata oluştu."
+        );
+
+    }
+
+}
+
 </script>
 
 </body>
