@@ -484,6 +484,34 @@ font-size:13px;
 
 }
 
+.menuToggle{
+    display:none;
+    width:auto;
+    padding:10px 14px;
+    background:#10244d;
+    color:white;
+    border:1px solid rgba(44,168,255,.3);
+    border-radius:10px;
+    font-size:22px;
+}
+
+@media(max-width:700px){
+
+    .menuToggle{
+        display:block;
+        flex-shrink:0;
+    }
+
+    .adminTopbar{
+        gap:12px;
+    }
+
+    .adminTopbar > div:nth-child(2){
+        flex:1;
+    }
+
+}
+
 </style>
 </head>
 
@@ -615,18 +643,28 @@ font-size:13px;
     <!-- ANA ALAN -->
     <main class="adminMain">
         <div class="adminTopbar">
-            <div>
-                <h1 id="sayfaBasligi">
-                    Ana Sayfa
-                </h1>
-                <p>
-                    H&H Football Academy Yönetim Sistemi
-                </p>
-            </div>
-            <div class="adminUser">
-                👤 Yönetici
-            </div>
-        </div>
+
+    <button
+        class="menuToggle"
+        onclick="menuAcKapat()"
+    >
+        ☰
+    </button>
+
+    <div>
+        <h1 id="sayfaBasligi">
+            Ana Sayfa
+        </h1>
+        <p>
+            H&H Football Academy Yönetim Sistemi
+        </p>
+    </div>
+
+    <div class="adminUser">
+        👤 Yönetici
+    </div>
+
+</div>
         <div class="adminContent">
             <!-- ANA SAYFA -->
             <div
@@ -1692,6 +1730,17 @@ async function duyuruEkle() {
 // =====================================================
 // SAYFA YÜKLENDİĞİNDE OTURUMU KONTROL ET
 // =====================================================
+
+function menuAcKapat(){
+
+    const sidebar =
+        document.querySelector(".sidebar");
+
+    if(sidebar){
+        sidebar.classList.toggle("open");
+    }
+
+}
 
 oturumKontrol();
 
