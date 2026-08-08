@@ -512,6 +512,212 @@ font-size:13px;
 
 }
 
+/* =========================================
+   OYUNCULAR
+========================================= */
+
+.oyuncuHeader{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    margin-bottom:25px;
+}
+
+.oyuncuHeader h2{
+    font-size:28px;
+    margin-bottom:5px;
+}
+
+.oyuncuHeader p{
+    opacity:.55;
+}
+
+.oyuncuEkleBtn{
+    width:auto;
+    padding:13px 22px;
+    background:#2ca8ff;
+}
+
+.oyuncuForm{
+    background:#10244d;
+    border:1px solid rgba(44,168,255,.18);
+    border-radius:20px;
+    padding:25px;
+    margin-bottom:25px;
+}
+
+.oyuncuForm h3{
+    margin-bottom:20px;
+    font-size:21px;
+}
+
+.oyuncuForm label{
+    display:block;
+    margin:12px 0 7px;
+    font-size:13px;
+    opacity:.7;
+}
+
+.oyuncuForm input,
+.oyuncuForm select{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    font-size:15px;
+    background:white;
+    color:#111;
+    margin-bottom:5px;
+}
+
+.oyuncuIkiKolon{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.oyuncuFormButtons{
+    display:flex;
+    gap:12px;
+    margin-top:20px;
+}
+
+.oyuncuFormButtons button{
+    flex:1;
+}
+
+.oyuncuFormButtons .iptalBtn{
+    background:#555;
+}
+
+#oyuncuMesaj{
+    text-align:center;
+    margin-top:15px;
+}
+
+.oyuncuFiltreler{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:25px;
+}
+
+.oyuncuFiltreler button{
+    width:auto;
+    padding:9px 18px;
+    background:#10244d;
+    border:1px solid rgba(255,255,255,.08);
+}
+
+.oyuncuFiltreler button.aktif{
+    background:#2ca8ff;
+}
+
+.oyuncularListe{
+    display:grid;
+    grid-template-columns:
+        repeat(auto-fill,minmax(280px,1fr));
+    gap:20px;
+}
+
+.oyuncuCard{
+    background:#10244d;
+    border-radius:20px;
+    padding:20px;
+    border:1px solid rgba(255,255,255,.05);
+    transition:.25s;
+}
+
+.oyuncuCard:hover{
+    transform:translateY(-4px);
+    border-color:rgba(44,168,255,.3);
+}
+
+.oyuncuFoto{
+    width:100px;
+    height:100px;
+    object-fit:cover;
+    border-radius:50%;
+    display:block;
+    margin:0 auto 15px;
+    border:3px solid #2ca8ff;
+}
+
+.oyuncuFotoYok{
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    background:#07152f;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:40px;
+    margin:0 auto 15px;
+}
+
+.oyuncuCard h3{
+    text-align:center;
+    margin-bottom:8px;
+}
+
+.oyuncuGrup{
+    display:block;
+    width:max-content;
+    margin:0 auto 15px;
+    padding:5px 12px;
+    border-radius:20px;
+    background:#2ca8ff;
+    font-size:12px;
+}
+
+.oyuncuBilgi{
+    margin:7px 0;
+    font-size:14px;
+    opacity:.8;
+}
+
+.oyuncuAksiyonlar{
+    display:flex;
+    gap:8px;
+    margin-top:18px;
+}
+
+.oyuncuAksiyonlar button{
+    flex:1;
+    padding:10px;
+    font-size:13px;
+}
+
+.oyuncuDuzenle{
+    background:#e09f00;
+}
+
+.oyuncuSil{
+    background:#d90429;
+}
+
+@media(max-width:700px){
+
+    .oyuncuHeader{
+        align-items:stretch;
+        flex-direction:column;
+    }
+
+    .oyuncuEkleBtn{
+        width:100%;
+    }
+
+    .oyuncuIkiKolon{
+        grid-template-columns:1fr;
+    }
+
+    .oyuncularListe{
+        grid-template-columns:1fr;
+    }
+
+}
+
 </style>
 </head>
 
@@ -828,15 +1034,212 @@ font-size:13px;
             </div>
             <!-- GELECEK SAYFALAR -->
             <div
-                id="sayfa-oyuncular"
-                class="adminSayfa"
-                style="display:none;"
-            >
-                <h2>⚽ Oyuncular</h2>
-                <p style="margin-top:15px;opacity:.6;">
-                    Oyuncu yönetim sistemi burada olacak.
-                </p>
+    id="sayfa-oyuncular"
+    class="adminSayfa"
+    style="display:none;"
+>
+
+    <div class="oyuncuHeader">
+        <div>
+            <h2>⚽ Oyuncular</h2>
+            <p>H&H Football Academy oyuncu yönetimi</p>
+        </div>
+
+        <button
+            class="oyuncuEkleBtn"
+            onclick="oyuncuFormAc()"
+        >
+            ➕ Oyuncu Ekle
+        </button>
+    </div>
+
+
+    <!-- OYUNCU EKLE / DÜZENLE FORMU -->
+
+    <div
+        id="oyuncuForm"
+        class="oyuncuForm"
+        style="display:none;"
+    >
+
+        <h3 id="oyuncuFormBaslik">
+            ➕ Yeni Oyuncu
+        </h3>
+
+        <input
+            type="hidden"
+            id="oyuncuId"
+        >
+
+        <label>Oyuncu Ad Soyad</label>
+
+        <input
+            type="text"
+            id="oyuncuAdi"
+            placeholder="Örn: Ahmet Yılmaz"
+        >
+
+
+        <label>Doğum Tarihi</label>
+
+        <input
+            type="date"
+            id="oyuncuDogum"
+        >
+
+
+        <label>Yaş Grubu</label>
+
+        <select id="oyuncuYasGrubu">
+
+            <option value="">Yaş Grubu Seçiniz</option>
+            <option value="U8">U8</option>
+            <option value="U10">U10</option>
+            <option value="U12">U12</option>
+            <option value="U14">U14</option>
+            <option value="U16">U16</option>
+
+        </select>
+
+
+        <label>Mevki</label>
+
+        <select id="oyuncuMevki">
+
+            <option value="">Mevki Seçiniz</option>
+            <option value="Kaleci">Kaleci</option>
+            <option value="Defans">Defans</option>
+            <option value="Orta Saha">Orta Saha</option>
+            <option value="Kanat">Kanat</option>
+            <option value="Forvet">Forvet</option>
+
+        </select>
+
+
+        <div class="oyuncuIkiKolon">
+
+            <div>
+                <label>Boy (cm)</label>
+
+                <input
+                    type="number"
+                    id="oyuncuBoy"
+                    placeholder="Örn: 150"
+                >
             </div>
+
+            <div>
+                <label>Kilo (kg)</label>
+
+                <input
+                    type="number"
+                    id="oyuncuKilo"
+                    placeholder="Örn: 42"
+                >
+            </div>
+
+        </div>
+
+
+        <label>Baskın Ayak</label>
+
+        <select id="oyuncuAyak">
+
+            <option value="">Seçiniz</option>
+            <option value="Sağ">Sağ</option>
+            <option value="Sol">Sol</option>
+            <option value="İki Ayak">İki Ayak</option>
+
+        </select>
+
+
+        <label>Veli Ad Soyad</label>
+
+        <input
+            type="text"
+            id="oyuncuVeli"
+            placeholder="Veli adı soyadı"
+        >
+
+
+        <label>Veli Telefon</label>
+
+        <input
+            type="tel"
+            id="oyuncuTelefon"
+            placeholder="05xx xxx xx xx"
+        >
+
+
+        <div class="oyuncuFormButtons">
+
+            <button
+                onclick="oyuncuKaydet()"
+            >
+                💾 Kaydet
+            </button>
+
+            <button
+                type="button"
+                class="iptalBtn"
+                onclick="oyuncuFormKapat()"
+            >
+                Vazgeç
+            </button>
+
+        </div>
+
+        <div id="oyuncuMesaj"></div>
+
+    </div>
+
+
+    <!-- FİLTRELER -->
+
+    <div class="oyuncuFiltreler">
+
+        <button
+            class="aktif"
+            onclick="oyuncuFiltrele('Tümü',this)"
+        >
+            Tümü
+        </button>
+
+        <button onclick="oyuncuFiltrele('U8',this)">
+            U8
+        </button>
+
+        <button onclick="oyuncuFiltrele('U10',this)">
+            U10
+        </button>
+
+        <button onclick="oyuncuFiltrele('U12',this)">
+            U12
+        </button>
+
+        <button onclick="oyuncuFiltrele('U14',this)">
+            U14
+        </button>
+
+        <button onclick="oyuncuFiltrele('U16',this)">
+            U16
+        </button>
+
+    </div>
+
+
+    <!-- OYUNCULAR -->
+
+    <div
+        id="oyuncularListe"
+        class="oyuncularListe"
+    >
+        <div class="empty">
+            Oyuncular yükleniyor...
+        </div>
+    </div>
+
+</div>
             <div
                 id="sayfa-performans"
                 class="adminSayfa"
@@ -1634,6 +2037,14 @@ secilenSayfa.style.display =
 
             basvurulariGetir();
         }
+        
+        if (
+    sayfa ===
+    "oyuncular"
+) {
+
+    oyunculariGetir();
+}
     };
 
 
@@ -1749,6 +2160,576 @@ function menuAcKapat(){
 }
 
 oturumKontrol();
+
+// =====================================================
+// OYUNCU YÖNETİMİ
+// =====================================================
+
+let tumOyuncular = [];
+let aktifOyuncuFiltresi = "Tümü";
+
+
+// OYUNCULARI GETİR
+
+async function oyunculariGetir(){
+
+    const liste =
+        document.getElementById("oyuncularListe");
+
+    if(!liste){
+        return;
+    }
+
+    liste.innerHTML =
+        "<div class='empty'>Oyuncular yükleniyor...</div>";
+
+    const { data, error } =
+        await supabaseClient
+            .from("Oyuncular")
+            .select("*")
+            .order("created_at", {
+                ascending:false
+            });
+
+    if(error){
+
+        console.error(
+            "Oyuncular alınamadı:",
+            error
+        );
+
+        liste.innerHTML =
+            "<div class='empty'>Oyuncular alınamadı.</div>";
+
+        return;
+    }
+
+    tumOyuncular = data || [];
+
+    oyunculariGoster();
+
+}
+
+
+// OYUNCULARI GÖSTER
+
+function oyunculariGoster(){
+
+    const liste =
+        document.getElementById("oyuncularListe");
+
+    if(!liste){
+        return;
+    }
+
+    let oyuncular =
+        tumOyuncular;
+
+
+    if(aktifOyuncuFiltresi !== "Tümü"){
+
+        oyuncular =
+            tumOyuncular.filter(
+                oyuncu =>
+                    oyuncu.yas_grubu ===
+                    aktifOyuncuFiltresi
+            );
+    }
+
+
+    if(oyuncular.length === 0){
+
+        liste.innerHTML =
+            "<div class='empty'>Bu grupta oyuncu bulunamadı.</div>";
+
+        return;
+    }
+
+
+    liste.innerHTML = "";
+
+
+    oyuncular.forEach(oyuncu => {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "oyuncuCard";
+
+
+        const foto =
+            oyuncu.foto_url
+                ? `
+                    <img
+                        src="${guvenliMetin(oyuncu.foto_url)}"
+                        class="oyuncuFoto"
+                        alt="Oyuncu"
+                    >
+                `
+                : `
+                    <div class="oyuncuFotoYok">
+                        ⚽
+                    </div>
+                `;
+
+
+        card.innerHTML = `
+
+            ${foto}
+
+            <span class="oyuncuGrup">
+                ${guvenliMetin(oyuncu.yas_grubu)}
+            </span>
+
+            <h3>
+                ${guvenliMetin(oyuncu.sporcu_adi)}
+            </h3>
+
+            <div class="oyuncuBilgi">
+                ⚽ Mevki:
+                ${guvenliMetin(oyuncu.mevki)}
+            </div>
+
+            <div class="oyuncuBilgi">
+                📏 Boy:
+                ${
+                    oyuncu.boy
+                    ? guvenliMetin(oyuncu.boy) + " cm"
+                    : "-"
+                }
+            </div>
+
+            <div class="oyuncuBilgi">
+                ⚖️ Kilo:
+                ${
+                    oyuncu.kilo
+                    ? guvenliMetin(oyuncu.kilo) + " kg"
+                    : "-"
+                }
+            </div>
+
+            <div class="oyuncuBilgi">
+                🦶 Ayak:
+                ${guvenliMetin(oyuncu.baskin_ayak)}
+            </div>
+
+            <div class="oyuncuBilgi">
+                👨 Veli:
+                ${guvenliMetin(oyuncu.veli_adi)}
+            </div>
+
+            <div class="oyuncuBilgi">
+                📞 Telefon:
+                ${guvenliMetin(oyuncu.veli_telefon)}
+            </div>
+
+            <div class="oyuncuAksiyonlar">
+
+                <button
+                    class="oyuncuDuzenle"
+                    onclick="oyuncuDuzenle('${oyuncu.id}')"
+                >
+                    ✏️ Düzenle
+                </button>
+
+                <button
+                    class="oyuncuSil"
+                    onclick="oyuncuSil('${oyuncu.id}')"
+                >
+                    🗑️ Sil
+                </button>
+
+            </div>
+
+        `;
+
+        liste.appendChild(card);
+
+    });
+
+}
+
+
+// FORMU AÇ
+
+function oyuncuFormAc(){
+
+    document.getElementById(
+        "oyuncuForm"
+    ).style.display = "block";
+
+    document.getElementById(
+        "oyuncuFormBaslik"
+    ).innerText =
+        "➕ Yeni Oyuncu";
+
+    document.getElementById(
+        "oyuncuId"
+    ).value = "";
+
+}
+
+
+// FORMU KAPAT
+
+function oyuncuFormKapat(){
+
+    document.getElementById(
+        "oyuncuForm"
+    ).style.display = "none";
+
+    oyuncuFormTemizle();
+
+}
+
+
+// FORMU TEMİZLE
+
+function oyuncuFormTemizle(){
+
+    const alanlar = [
+        "oyuncuId",
+        "oyuncuAdi",
+        "oyuncuDogum",
+        "oyuncuBoy",
+        "oyuncuKilo",
+        "oyuncuVeli",
+        "oyuncuTelefon"
+    ];
+
+    alanlar.forEach(id => {
+
+        const element =
+            document.getElementById(id);
+
+        if(element){
+            element.value = "";
+        }
+
+    });
+
+
+    document.getElementById(
+        "oyuncuYasGrubu"
+    ).value = "";
+
+    document.getElementById(
+        "oyuncuMevki"
+    ).value = "";
+
+    document.getElementById(
+        "oyuncuAyak"
+    ).value = "";
+
+}
+
+
+// OYUNCU KAYDET
+
+async function oyuncuKaydet(){
+
+    const id =
+        document.getElementById(
+            "oyuncuId"
+        ).value;
+
+
+    const oyuncu = {
+
+        sporcu_adi:
+            document.getElementById(
+                "oyuncuAdi"
+            ).value.trim(),
+
+        dogum_tarihi:
+            document.getElementById(
+                "oyuncuDogum"
+            ).value || null,
+
+        yas_grubu:
+            document.getElementById(
+                "oyuncuYasGrubu"
+            ).value,
+
+        mevki:
+            document.getElementById(
+                "oyuncuMevki"
+            ).value,
+
+        boy:
+            document.getElementById(
+                "oyuncuBoy"
+            ).value || null,
+
+        kilo:
+            document.getElementById(
+                "oyuncuKilo"
+            ).value || null,
+
+        baskin_ayak:
+            document.getElementById(
+                "oyuncuAyak"
+            ).value,
+
+        veli_adi:
+            document.getElementById(
+                "oyuncuVeli"
+            ).value.trim(),
+
+        veli_telefon:
+            document.getElementById(
+                "oyuncuTelefon"
+            ).value.trim()
+
+    };
+
+
+    if(!oyuncu.sporcu_adi){
+
+        alert(
+            "Oyuncu adını gir."
+        );
+
+        return;
+    }
+
+
+    if(!oyuncu.yas_grubu){
+
+        alert(
+            "Yaş grubunu seç."
+        );
+
+        return;
+    }
+
+
+    let sonuc;
+
+
+    if(id){
+
+        sonuc =
+            await supabaseClient
+                .from("Oyuncular")
+                .update(oyuncu)
+                .eq("id", id);
+
+    }else{
+
+        sonuc =
+            await supabaseClient
+                .from("Oyuncular")
+                .insert([oyuncu]);
+
+    }
+
+
+    if(sonuc.error){
+
+        console.error(
+            "Oyuncu kayıt hatası:",
+            sonuc.error
+        );
+
+        alert(
+            "Oyuncu kaydedilemedi: " +
+            sonuc.error.message
+        );
+
+        return;
+    }
+
+
+    alert(
+        id
+        ? "Oyuncu güncellendi."
+        : "Oyuncu eklendi."
+    );
+
+
+    oyuncuFormKapat();
+
+    await oyunculariGetir();
+
+}
+
+
+// OYUNCU DÜZENLE
+
+function oyuncuDuzenle(id){
+
+    const oyuncu =
+        tumOyuncular.find(
+            item =>
+                item.id === id
+        );
+
+
+    if(!oyuncu){
+        return;
+    }
+
+
+    document.getElementById(
+        "oyuncuForm"
+    ).style.display = "block";
+
+
+    document.getElementById(
+        "oyuncuFormBaslik"
+    ).innerText =
+        "✏️ Oyuncuyu Düzenle";
+
+
+    document.getElementById(
+        "oyuncuId"
+    ).value =
+        oyuncu.id;
+
+
+    document.getElementById(
+        "oyuncuAdi"
+    ).value =
+        oyuncu.sporcu_adi || "";
+
+
+    document.getElementById(
+        "oyuncuDogum"
+    ).value =
+        oyuncu.dogum_tarihi || "";
+
+
+    document.getElementById(
+        "oyuncuYasGrubu"
+    ).value =
+        oyuncu.yas_grubu || "";
+
+
+    document.getElementById(
+        "oyuncuMevki"
+    ).value =
+        oyuncu.mevki || "";
+
+
+    document.getElementById(
+        "oyuncuBoy"
+    ).value =
+        oyuncu.boy || "";
+
+
+    document.getElementById(
+        "oyuncuKilo"
+    ).value =
+        oyuncu.kilo || "";
+
+
+    document.getElementById(
+        "oyuncuAyak"
+    ).value =
+        oyuncu.baskin_ayak || "";
+
+
+    document.getElementById(
+        "oyuncuVeli"
+    ).value =
+        oyuncu.veli_adi || "";
+
+
+    document.getElementById(
+        "oyuncuTelefon"
+    ).value =
+        oyuncu.veli_telefon || "";
+
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+}
+
+
+// OYUNCU SİL
+
+async function oyuncuSil(id){
+
+    const onay =
+        confirm(
+            "Bu oyuncuyu silmek istediğine emin misin?"
+        );
+
+
+    if(!onay){
+        return;
+    }
+
+
+    const { error } =
+        await supabaseClient
+            .from("Oyuncular")
+            .delete()
+            .eq("id", id);
+
+
+    if(error){
+
+        console.error(
+            "Oyuncu silme hatası:",
+            error
+        );
+
+        alert(
+            "Oyuncu silinemedi: " +
+            error.message
+        );
+
+        return;
+    }
+
+
+    alert(
+        "Oyuncu başarıyla silindi."
+    );
+
+
+    await oyunculariGetir();
+
+}
+
+
+// GRUP FİLTRESİ
+
+function oyuncuFiltrele(grup, buton){
+
+    aktifOyuncuFiltresi =
+        grup;
+
+
+    document
+        .querySelectorAll(
+            ".oyuncuFiltreler button"
+        )
+        .forEach(
+            btn =>
+                btn.classList.remove(
+                    "aktif"
+                )
+        );
+
+
+    if(buton){
+
+        buton.classList.add(
+            "aktif"
+        );
+    }
+
+
+    oyunculariGoster();
+
+}
 
 </script>
 
