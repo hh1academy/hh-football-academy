@@ -2238,61 +2238,6 @@ async function whatsappGonder(){
 
 }
 
-let galeriIndex = 0;
-
-const galeriTrack = document.querySelector(".galleryTrack");
-const galeriNoktalar = document.querySelectorAll(".galleryDots span");
-
-function galeriGuncelle(){
-
-    galeriTrack.style.transform =
-        "translateX(-" + (galeriIndex * 100) + "%)";
-
-    galeriNoktalar.forEach((nokta, index) => {
-
-        nokta.classList.toggle(
-            "active",
-            index === galeriIndex
-        );
-
-    });
-
-}
-
-function galeriIleri(){
-
-    galeriIndex++;
-
-    if(galeriIndex >= 8){
-        galeriIndex = 0;
-    }
-
-    galeriGuncelle();
-
-}
-
-function galeriGeri(){
-
-    galeriIndex--;
-
-    if(galeriIndex < 0){
-        galeriIndex = 7;
-    }
-
-    galeriGuncelle();
-
-}
-
-function galeriGit(index){
-
-    galeriIndex = index;
-
-    galeriGuncelle();
-
-}
-
-setInterval(galeriIleri, 4000);
-
 async function duyurulariGetir(){
 
     const container =
@@ -2424,14 +2369,12 @@ async function galeriyiGetir(){
         });
 
     if(error){
-        console.error("Galeri yükleme hatası:", error);
-        return;
-    }
 
-    if(!data || data.length === 0){
+        console.error("Galeri yükleme hatası:", error);
+
         track.innerHTML = `
             <div style="
-                min-width:100%;
+                width:100%;
                 height:100%;
                 display:flex;
                 align-items:center;
@@ -2439,21 +2382,41 @@ async function galeriyiGetir(){
                 color:white;
                 font-size:18px;
             ">
-                Henüz galeri fotoğrafı eklenmedi.
+                Galeri yüklenemedi.
             </div>
         `;
 
-        dots.innerHTML = "";
         return;
     }
 
-    galeriResimleri = data.filter(dosya =>
+    galeriResimleri = (data || []).filter(dosya =>
         dosya.name &&
         !dosya.name.endsWith("/")
     );
 
     track.innerHTML = "";
     dots.innerHTML = "";
+
+    if(galeriResimleri.length === 0){
+
+        track.innerHTML = `
+            <div style="
+                width:100%;
+                height:100%;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                color:white;
+                font-size:18px;
+                text-align:center;
+                padding:20px;
+            ">
+                Henüz galeri fotoğrafı eklenmedi.
+            </div>
+        `;
+
+        return;
+    }
 
     galeriResimleri.forEach((dosya, index) => {
 
@@ -2466,21 +2429,32 @@ async function galeriyiGetir(){
         const img = document.createElement("img");
 
         img.src = publicUrlData.publicUrl;
+
         img.alt = "H&H Football Academy";
+
         img.onerror = function(){
-            console.error("Fotoğraf açılamadı:", img.src);
+
+            console.error(
+                "Fotoğraf açılamadı:",
+                img.src
+            );
+
         };
 
         track.appendChild(img);
 
-        const nokta = document.createElement("span");
+
+        const nokta =
+            document.createElement("span");
 
         if(index === 0){
             nokta.classList.add("active");
         }
 
         nokta.onclick = function(){
+
             galeriGit(index);
+
         };
 
         dots.appendChild(nokta);
@@ -2493,7 +2467,102 @@ async function galeriyiGetir(){
 
 }
 
+
+function galeriGuncelle(){
+
+    const track =
+        document.getElementById("galleryTrack");
+
+    const dots =
+        document.getElementById("galleryDots");
+
+    if(!track) return;
+
+    track.style.transform =
+        "translateX(-" +
+        (galeriIndex * 100) +
+        "%)";
+
+
+    if(dots){
+
+        const noktalar =
+            dots.querySelectorAll("span");
+
+        noktalar.forEach((nokta, index) => {
+
+            nokta.classList.toggle(
+                "active",
+                index === galeriIndex
+            );
+
+        });
+
+    }
+
+}
+
+
+function galeriIleri(){
+
+    if(galeriResimleri.length === 0) return;
+
+    galeriIndex++;
+
+    if(
+        galeriIndex >=
+        galeriResimleri.length
+    ){
+
+        galeriIndex = 0;
+
+    }
+
+    galeriGuncelle();
+
+}
+
+
+function galeriGeri(){
+
+    if(galeriResimleri.length === 0) return;
+
+    galeriIndex--;
+
+    if(galeriIndex < 0){
+
+        galeriIndex =
+            galeriResimleri.length - 1;
+
+    }
+
+    galeriGuncelle();
+
+}
+
+
+function galeriGit(index){
+
+    if(
+        index < 0 ||
+        index >= galeriResimleri.length
+    ){
+
+        return;
+
+    }
+
+    galeriIndex = index;
+
+    galeriGuncelle();
+
+}
+
+
+setInterval(galeriIleri, 4000);
+
 duyurulariGetir();
+galeriyiGetir();
 
 </script>
 
