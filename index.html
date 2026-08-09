@@ -2398,6 +2398,101 @@ async function duyurulariGetir(){
 
 }
 
+/* =========================
+   SUPABASE GALERİ
+========================= */
+
+let galeriIndex = 0;
+let galeriResimleri = [];
+
+async function galeriyiGetir(){
+
+    const track = document.getElementById("galleryTrack");
+    const dots = document.getElementById("galleryDots");
+
+    if(!track || !dots) return;
+
+    const { data, error } = await supabaseClient
+        .storage
+        .from("galeri")
+        .list("", {
+            limit: 100,
+            sortBy: {
+                column: "created_at",
+                order: "asc"
+            }
+        });
+
+    if(error){
+        console.error("Galeri yükleme hatası:", error);
+        return;
+    }
+
+    if(!data || data.length === 0){
+        track.innerHTML = `
+            <div style="
+                min-width:100%;
+                height:100%;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                color:white;
+                font-size:18px;
+            ">
+                Henüz galeri fotoğrafı eklenmedi.
+            </div>
+        `;
+
+        dots.innerHTML = "";
+        return;
+    }
+
+    galeriResimleri = data.filter(dosya =>
+        dosya.name &&
+        !dosya.name.endsWith("/")
+    );
+
+    track.innerHTML = "";
+    dots.innerHTML = "";
+
+    galeriResimleri.forEach((dosya, index) => {
+
+        const { data: publicUrlData } =
+            supabaseClient
+                .storage
+                .from("galeri")
+                .getPublicUrl(dosya.name);
+
+        const img = document.createElement("img");
+
+        img.src = publicUrlData.publicUrl;
+        img.alt = "H&H Football Academy";
+        img.onerror = function(){
+            console.error("Fotoğraf açılamadı:", img.src);
+        };
+
+        track.appendChild(img);
+
+        const nokta = document.createElement("span");
+
+        if(index === 0){
+            nokta.classList.add("active");
+        }
+
+        nokta.onclick = function(){
+            galeriGit(index);
+        };
+
+        dots.appendChild(nokta);
+
+    });
+
+    galeriIndex = 0;
+
+    galeriGuncelle();
+
+}
+
 duyurulariGetir();
 
 </script>
