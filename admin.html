@@ -718,6 +718,121 @@ font-size:13px;
 
 }
 
+/* =========================================
+   GALERİ YÖNETİMİ
+========================================= */
+
+.galleryAdmin{
+    display:flex;
+    flex-direction:column;
+    gap:25px;
+}
+
+.galleryAdminHeader{
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(44,168,255,.18),
+            transparent 45%
+        ),
+        #10244d;
+
+    border:1px solid rgba(44,168,255,.15);
+    border-radius:22px;
+    padding:28px;
+}
+
+.galleryAdminHeader h2{
+    font-size:28px;
+    margin-bottom:8px;
+}
+
+.galleryAdminHeader p{
+    opacity:.6;
+}
+
+.galleryUploadBox{
+    background:#10244d;
+    padding:25px;
+    border-radius:20px;
+    border:1px solid rgba(255,255,255,.05);
+}
+
+.galleryUploadBox h3{
+    margin-bottom:20px;
+}
+
+.galleryUploadBox input[type="text"]{
+    margin-bottom:15px;
+}
+
+.galleryUploadBox input[type="file"]{
+    background:#07152f;
+    color:white;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:15px;
+}
+
+.galleryMessage{
+    text-align:center;
+    margin-top:15px;
+    min-height:20px;
+}
+
+.galleryAdminList{
+    background:#10244d;
+    padding:25px;
+    border-radius:20px;
+}
+
+.galleryAdminList h3{
+    margin-bottom:20px;
+}
+
+.galleryGrid{
+    display:grid;
+    grid-template-columns:repeat(
+        auto-fill,
+        minmax(220px,1fr)
+    );
+    gap:20px;
+}
+
+.galleryItem{
+    background:#07152f;
+    border-radius:18px;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,.07);
+}
+
+.galleryItem img{
+    width:100%;
+    height:190px;
+    object-fit:cover;
+    display:block;
+}
+
+.galleryItemInfo{
+    padding:15px;
+}
+
+.galleryItemInfo h4{
+    margin-bottom:12px;
+    font-size:16px;
+}
+
+.galleryDelete{
+    background:#d90429;
+    margin-top:10px;
+    padding:11px;
+    font-size:14px;
+}
+
+.galleryDelete:hover{
+    background:#b90322;
+}
+
 </style>
 </head>
 
@@ -1271,15 +1386,70 @@ font-size:13px;
                 </p>
             </div>
             <div
-                id="sayfa-galeri"
-                class="adminSayfa"
-                style="display:none;"
-            >
-                <h2>📸 Galeri</h2>
-                <p style="margin-top:15px;opacity:.6;">
-                    Galeri yönetimi burada olacak.
+    id="sayfa-galeri"
+    class="adminSayfa"
+    style="display:none;"
+>
+
+    <div class="galleryAdmin">
+
+        <div class="galleryAdminHeader">
+            <div>
+                <h2>📸 Galeri Yönetimi</h2>
+                <p>
+                    Ana sitede yayınlanacak fotoğrafları buradan yönet.
                 </p>
             </div>
+        </div>
+
+        <div class="galleryUploadBox">
+
+            <h3>➕ Yeni Fotoğraf Ekle</h3>
+
+            <input
+                type="text"
+                id="galeriBaslik"
+                placeholder="Fotoğraf başlığı"
+            >
+
+            <input
+                type="file"
+                id="galeriDosya"
+                accept="image/*"
+            >
+
+            <button
+                type="button"
+                onclick="galeriYukle()"
+            >
+                📤 Fotoğrafı Yükle
+            </button>
+
+            <div
+                id="galeriMesaj"
+                class="galleryMessage"
+            ></div>
+
+        </div>
+
+        <div class="galleryAdminList">
+
+            <h3>🖼️ Yüklenen Fotoğraflar</h3>
+
+            <div
+                id="galeriListesi"
+                class="galleryGrid"
+            >
+                <div class="empty">
+                    Galeri yükleniyor...
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
             <div
                 id="sayfa-antrenorler"
                 class="adminSayfa"
@@ -2175,6 +2345,451 @@ function menuAcKapat(){
         sidebar.classList.toggle("open");
     }
 
+}
+
+// =====================================================
+// GALERİ
+// =====================================================
+
+async function galeriYukle() {
+
+    const dosyaInput =
+        document.getElementById("galeriDosya");
+
+    const baslikInput =
+        document.getElementById("galeriBaslik");
+
+    const mesaj =
+        document.getElementById("galeriMesaj");
+
+
+    const dosya =
+        dosyaInput.files[0];
+
+    const baslik =
+        baslikInput.value.trim();
+
+
+    mesaj.innerText = "";
+
+
+    if (!dosya) {
+
+        mesaj.innerText =
+            "⚠️ Lütfen bir fotoğraf seç.";
+
+        return;
+    }
+
+
+    if (!dosya.type.startsWith("image/")) {
+
+        mesaj.innerText =
+            "⚠️ Sadece fotoğraf yükleyebilirsin.";
+
+        return;
+    }
+
+
+    // 10 MB SINIRI
+
+    if (dosya.size > 10 * 1024 * 1024) {
+
+        mesaj.innerText =
+            "⚠️ Fotoğraf en fazla 10 MB olabilir.";
+
+        return;
+    }
+
+
+    try {
+
+        mesaj.innerText =
+            "⏳ Fotoğraf yükleniyor...";
+
+
+        // DOSYA İSMİ
+
+        const uzanti =
+            dosya.name
+                .split(".")
+                .pop()
+                .toLowerCase();
+
+
+        const benzersizIsim =
+            Date.now() +
+            "_" +
+            Math.random()
+                .toString(36)
+                .substring(2, 9) +
+            "." +
+            uzanti;
+
+
+        const storagePath =
+            "galeri/" +
+            benzersizIsim;
+
+
+        // STORAGE'A YÜKLE
+
+        const { error: uploadError } =
+            await supabaseClient
+                .storage
+                .from("galeri")
+                .upload(
+                    storagePath,
+                    dosya,
+                    {
+                        cacheControl:"3600",
+                        upsert:false
+                    }
+                );
+
+
+        if (uploadError) {
+
+            console.error(
+                "Fotoğraf yükleme hatası:",
+                uploadError
+            );
+
+            mesaj.innerText =
+                "❌ Fotoğraf yüklenemedi: " +
+                uploadError.message;
+
+            return;
+        }
+
+
+        // PUBLIC URL
+
+        const { data: urlData } =
+            supabaseClient
+                .storage
+                .from("galeri")
+                .getPublicUrl(storagePath);
+
+
+        const imageUrl =
+            urlData.publicUrl;
+
+
+        // GALERİ TABLOSUNA KAYDET
+
+        const { error: dbError } =
+            await supabaseClient
+                .from("Galeri")
+                .insert([
+                    {
+                        baslik:
+                            baslik || "H&H Football Academy",
+
+                        image_url:
+                            imageUrl,
+
+                        storage_path:
+                            storagePath,
+
+                        aktif:
+                            true
+                    }
+                ]);
+
+
+        if (dbError) {
+
+            console.error(
+                "Galeri kayıt hatası:",
+                dbError
+            );
+
+
+            // TABLOYA KAYDEDİLEMEDİYSE
+            // STORAGE'DAKİ DOSYAYI DA SİL
+
+            await supabaseClient
+                .storage
+                .from("galeri")
+                .remove([
+                    storagePath
+                ]);
+
+
+            mesaj.innerText =
+                "❌ Galeri kaydı oluşturulamadı: " +
+                dbError.message;
+
+            return;
+        }
+
+
+        mesaj.innerText =
+            "✅ Fotoğraf başarıyla yüklendi!";
+
+
+        baslikInput.value =
+            "";
+
+        dosyaInput.value =
+            "";
+
+
+        await galeriGetir();
+
+
+    } catch (error) {
+
+        console.error(
+            "Galeri yükleme hatası:",
+            error
+        );
+
+        mesaj.innerText =
+            "❌ Yükleme sırasında hata oluştu.";
+    }
+}
+
+
+// =====================================================
+// GALERİYİ GETİR
+// =====================================================
+
+async function galeriGetir() {
+
+    const container =
+        document.getElementById(
+            "galeriListesi"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    container.innerHTML =
+        "<div class='empty'>Galeri yükleniyor...</div>";
+
+
+    try {
+
+        const { data, error } =
+            await supabaseClient
+                .from("Galeri")
+                .select("*")
+                .order(
+                    "created_at",
+                    {
+                        ascending:false
+                    }
+                );
+
+
+        if (error) {
+
+            console.error(
+                "Galeri alınamadı:",
+                error
+            );
+
+            container.innerHTML =
+                "<div class='empty'>" +
+                "Galeri alınamadı." +
+                "</div>";
+
+            return;
+        }
+
+
+        if (!data || data.length === 0) {
+
+            container.innerHTML =
+                "<div class='empty'>" +
+                "Henüz fotoğraf yüklenmemiş." +
+                "</div>";
+
+            return;
+        }
+
+
+        container.innerHTML = "";
+
+
+        data.forEach(item => {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+            card.className =
+                "galleryItem";
+
+
+            card.innerHTML = `
+
+                <img
+                    src="${guvenliMetin(item.image_url)}"
+                    alt="${guvenliMetin(item.baslik)}"
+                >
+
+                <div class="galleryItemInfo">
+
+                    <h4>
+                        ${guvenliMetin(
+                            item.baslik
+                        )}
+                    </h4>
+
+                    <button
+                        type="button"
+                        class="galleryDelete"
+                        onclick="galeriSil('${guvenliMetin(item.id)}')"
+                    >
+                        🗑️ Fotoğrafı Sil
+                    </button>
+
+                </div>
+
+            `;
+
+
+            container.appendChild(card);
+
+        });
+
+
+    } catch (error) {
+
+        console.error(
+            "Galeri getirme hatası:",
+            error
+        );
+
+        container.innerHTML =
+            "<div class='empty'>" +
+            "Galeri yüklenirken hata oluştu." +
+            "</div>";
+    }
+}
+
+
+// =====================================================
+// GALERİ FOTOĞRAFI SİL
+// =====================================================
+
+async function galeriSil(id) {
+
+    const onay =
+        confirm(
+            "Bu fotoğrafı galeriden silmek istediğinize emin misiniz?"
+        );
+
+
+    if (!onay) {
+        return;
+    }
+
+
+    try {
+
+        // ÖNCE KAYDI BUL
+
+        const { data: foto, error: bulError } =
+            await supabaseClient
+                .from("Galeri")
+                .select("storage_path")
+                .eq("id", id)
+                .single();
+
+
+        if (bulError) {
+
+            console.error(
+                "Galeri kaydı bulunamadı:",
+                bulError
+            );
+
+            alert(
+                "Fotoğraf bulunamadı."
+            );
+
+            return;
+        }
+
+
+        // STORAGE'DAN SİL
+
+        if (
+            foto &&
+            foto.storage_path
+        ) {
+
+            const { error: storageError } =
+                await supabaseClient
+                    .storage
+                    .from("galeri")
+                    .remove([
+                        foto.storage_path
+                    ]);
+
+
+            if (storageError) {
+
+                console.error(
+                    "Storage silme hatası:",
+                    storageError
+                );
+            }
+        }
+
+
+        // TABLODAN SİL
+
+        const { error } =
+            await supabaseClient
+                .from("Galeri")
+                .delete()
+                .eq("id", id);
+
+
+        if (error) {
+
+            console.error(
+                "Galeri silme hatası:",
+                error
+            );
+
+            alert(
+                "Fotoğraf silinemedi: " +
+                error.message
+            );
+
+            return;
+        }
+
+
+        alert(
+            "Fotoğraf başarıyla silindi."
+        );
+
+
+        await galeriGetir();
+
+
+    } catch (error) {
+
+        console.error(
+            "Galeri silme hatası:",
+            error
+        );
+
+        alert(
+            "Silme sırasında hata oluştu."
+        );
+    }
 }
 
 oturumKontrol();
